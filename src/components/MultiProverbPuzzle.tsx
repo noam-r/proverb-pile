@@ -34,11 +34,12 @@ export const MultiProverbPuzzle: React.FC<MultiProverbPuzzleProps> = ({
   } | null>(null);
 
   // Collect all available words from all proverbs
-  const allAvailableWords = useMemo(() => {
+  const availableWordsUnsorted = useMemo(() => {
     const words: Array<{
       word: string;
       proverbIndex: number;
       wordIndex: number;
+      uniqueKey: string;
     }> = [];
 
     proverbStates.forEach((state, proverbIndex) => {
@@ -49,12 +50,28 @@ export const MultiProverbPuzzle: React.FC<MultiProverbPuzzleProps> = ({
           word: wp.word,
           proverbIndex,
           wordIndex,
+          uniqueKey: `${proverbIndex}-${wordIndex}`, // Unique identifier
         });
       });
     });
 
     return words;
   }, [proverbStates]);
+
+  // Shuffle all words together on initial load
+  const allAvailableWords = useMemo(() => {
+    const shuffled = [...availableWordsUnsorted];
+
+    // Fisher-Yates shuffle
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled;
+    // Only re-shuffle when the list of available words changes (not their order)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [availableWordsUnsorted.map(w => w.uniqueKey).sort().join(',')]);
 
   const handleWordDragStart = useCallback(
     (proverbIndex: number, wordIndex: number) => {
