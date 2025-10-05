@@ -87,16 +87,15 @@ describe('PuzzleBuilder', () => {
   });
 
   it('allows entering proverb data', async () => {
-    const user = userEvent.setup();
     render(<PuzzleBuilder />);
 
     const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
     const cultureInputs = screen.getAllByPlaceholderText(/English, Chinese/i);
     const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
 
-    await user.type(solutionInputs[0], 'A bird in hand');
-    await user.type(cultureInputs[0], 'English');
-    await user.type(meaningInputs[0], 'Something you have is better');
+    await userEvent.type(solutionInputs[0], 'A bird in hand');
+    await userEvent.type(cultureInputs[0], 'English');
+    await userEvent.type(meaningInputs[0], 'Something you have is better');
 
     expect(solutionInputs[0]).toHaveValue('A bird in hand');
     expect(cultureInputs[0]).toHaveValue('English');
@@ -115,7 +114,7 @@ describe('PuzzleBuilder', () => {
   });
 
   it('shows error when solution has too few words', async () => {
-    const user = userEvent.setup();
+    // Using userEvent v13 API (no setup needed)
     render(<PuzzleBuilder />);
 
     const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
@@ -124,9 +123,9 @@ describe('PuzzleBuilder', () => {
 
     // Enter data for all three proverbs but with short solutions
     for (let i = 0; i < 3; i++) {
-      await user.type(solutionInputs[i], 'Too short');
-      await user.type(cultureInputs[i], 'Test');
-      await user.type(meaningInputs[i], 'Test meaning');
+      await userEvent.type(solutionInputs[i], 'Too short');
+      await userEvent.type(cultureInputs[i], 'Test');
+      await userEvent.type(meaningInputs[i], 'Test meaning');
     }
 
     const generateButton = screen.getByText('Generate Puzzle URL');
@@ -139,7 +138,7 @@ describe('PuzzleBuilder', () => {
   });
 
   it('generates valid puzzle URL with correct data', async () => {
-    const user = userEvent.setup();
+    // Using userEvent v13 API (no setup needed)
     render(<PuzzleBuilder />);
 
     const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
@@ -154,9 +153,9 @@ describe('PuzzleBuilder', () => {
     ];
 
     for (let i = 0; i < 3; i++) {
-      await user.type(solutionInputs[i], proverbs[i]);
-      await user.type(cultureInputs[i], 'English');
-      await user.type(meaningInputs[i], 'Test meaning here');
+      await userEvent.type(solutionInputs[i], proverbs[i]);
+      await userEvent.type(cultureInputs[i], 'English');
+      await userEvent.type(meaningInputs[i], 'Test meaning here');
     }
 
     const generateButton = screen.getByText('Generate Puzzle URL');
@@ -172,7 +171,7 @@ describe('PuzzleBuilder', () => {
   });
 
   it('shows copy button after URL generation', async () => {
-    const user = userEvent.setup();
+    // Using userEvent v13 API (no setup needed)
     render(<PuzzleBuilder />);
 
     const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
@@ -180,9 +179,9 @@ describe('PuzzleBuilder', () => {
     const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
 
     for (let i = 0; i < 3; i++) {
-      await user.type(solutionInputs[i], 'This is a valid proverb with enough words');
-      await user.type(cultureInputs[i], 'Test Culture');
-      await user.type(meaningInputs[i], 'This is the meaning of the proverb');
+      await userEvent.type(solutionInputs[i], 'This is a valid proverb with enough words');
+      await userEvent.type(cultureInputs[i], 'Test Culture');
+      await userEvent.type(meaningInputs[i], 'This is the meaning of the proverb');
     }
 
     const generateButton = screen.getByText('Generate Puzzle URL');
@@ -194,7 +193,7 @@ describe('PuzzleBuilder', () => {
   });
 
   it('copies URL to clipboard when copy button is clicked', async () => {
-    const user = userEvent.setup();
+    // Using userEvent v13 API (no setup needed)
     const writeTextMock = jest.fn(() => Promise.resolve());
     Object.assign(navigator, {
       clipboard: { writeText: writeTextMock },
@@ -207,9 +206,9 @@ describe('PuzzleBuilder', () => {
     const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
 
     for (let i = 0; i < 3; i++) {
-      await user.type(solutionInputs[i], 'This is a valid proverb with enough words');
-      await user.type(cultureInputs[i], 'Test Culture');
-      await user.type(meaningInputs[i], 'This is the meaning of the proverb');
+      await userEvent.type(solutionInputs[i], 'This is a valid proverb with enough words');
+      await userEvent.type(cultureInputs[i], 'Test Culture');
+      await userEvent.type(meaningInputs[i], 'This is the meaning of the proverb');
     }
 
     const generateButton = screen.getByText('Generate Puzzle URL');
@@ -230,7 +229,7 @@ describe('PuzzleBuilder', () => {
 
   it('resets copy button text after delay', async () => {
     jest.useFakeTimers();
-    const user = userEvent.setup({ delay: null });
+    // Using userEvent v13 API (no setup needed)
 
     render(<PuzzleBuilder />);
 
@@ -239,9 +238,9 @@ describe('PuzzleBuilder', () => {
     const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
 
     for (let i = 0; i < 3; i++) {
-      await user.type(solutionInputs[i], 'This is a valid proverb with enough words');
-      await user.type(cultureInputs[i], 'Test Culture');
-      await user.type(meaningInputs[i], 'This is the meaning of the proverb');
+      await userEvent.type(solutionInputs[i], 'This is a valid proverb with enough words');
+      await userEvent.type(cultureInputs[i], 'Test Culture');
+      await userEvent.type(meaningInputs[i], 'This is the meaning of the proverb');
     }
 
     const generateButton = screen.getByText('Generate Puzzle URL');
@@ -269,7 +268,7 @@ describe('PuzzleBuilder', () => {
   });
 
   it('validates word count (5-10 words)', async () => {
-    const user = userEvent.setup();
+    // Using userEvent v13 API (no setup needed)
     render(<PuzzleBuilder />);
 
     const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
@@ -277,19 +276,19 @@ describe('PuzzleBuilder', () => {
     const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
 
     // Too many words (11 words)
-    await user.type(solutionInputs[0], 'One two three four five six seven eight nine ten eleven');
-    await user.type(cultureInputs[0], 'Test');
-    await user.type(meaningInputs[0], 'Test');
+    await userEvent.type(solutionInputs[0], 'One two three four five six seven eight nine ten eleven');
+    await userEvent.type(cultureInputs[0], 'Test');
+    await userEvent.type(meaningInputs[0], 'Test');
 
     // Valid
-    await user.type(solutionInputs[1], 'One two three four five six');
-    await user.type(cultureInputs[1], 'Test');
-    await user.type(meaningInputs[1], 'Test');
+    await userEvent.type(solutionInputs[1], 'One two three four five six');
+    await userEvent.type(cultureInputs[1], 'Test');
+    await userEvent.type(meaningInputs[1], 'Test');
 
     // Valid
-    await user.type(solutionInputs[2], 'One two three four five');
-    await user.type(cultureInputs[2], 'Test');
-    await user.type(meaningInputs[2], 'Test');
+    await userEvent.type(solutionInputs[2], 'One two three four five');
+    await userEvent.type(cultureInputs[2], 'Test');
+    await userEvent.type(meaningInputs[2], 'Test');
 
     const generateButton = screen.getByText('Generate Puzzle URL');
     fireEvent.click(generateButton);
@@ -300,7 +299,7 @@ describe('PuzzleBuilder', () => {
   });
 
   it('clears error when user starts typing', async () => {
-    const user = userEvent.setup();
+    // Using userEvent v13 API (no setup needed)
     render(<PuzzleBuilder />);
 
     const generateButton = screen.getByText('Generate Puzzle URL');
@@ -311,7 +310,7 @@ describe('PuzzleBuilder', () => {
     });
 
     const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
-    await user.type(solutionInputs[0], 'A');
+    await userEvent.type(solutionInputs[0], 'A');
 
     await waitFor(() => {
       expect(screen.queryByText(/All proverbs must have/i)).not.toBeInTheDocument();
