@@ -1,0 +1,222 @@
+/* Multi-proverb puzzle component styles */
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.instruction {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.puzzleArea {
+  margin-bottom: 40px;
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Available words section */
+.wordsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-height: 100px;
+  padding: 16px;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+}
+
+/* Proverbs section */
+.proverbsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.proverbItem {
+  padding: 16px;
+  background-color: #ffffff;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.proverbItem.validated {
+  border-color: var(--color-border-dark);
+}
+
+.proverbItem.solved {
+  border-color: var(--color-success);
+  background-color: var(--color-success-bg);
+}
+
+.proverbItem.incorrect {
+  border-color: var(--color-error);
+  background-color: var(--color-error-bg);
+}
+
+.proverbHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.proverbNumber {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.proverbStatus {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.proverbStatus.correct {
+  color: var(--color-success-dark);
+  background-color: rgba(76, 175, 80, 0.2);
+}
+
+.proverbStatus.wrong {
+  color: var(--color-error-dark);
+  background-color: rgba(244, 67, 54, 0.2);
+}
+
+.solutionContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-height: 60px;
+  padding: 12px;
+  background-color: var(--color-surface-secondary);
+  border-radius: var(--radius-sm);
+}
+
+/* Global status message */
+.status {
+  text-align: center;
+  padding: 16px;
+  margin-bottom: 24px;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.status.success {
+  background-color: var(--color-success-bg);
+  color: var(--color-success-dark);
+  border: 2px solid var(--color-success);
+}
+
+.status.error {
+  background-color: var(--color-error-bg);
+  color: var(--color-error-dark);
+  border: 2px solid var(--color-error);
+}
+
+.status.partial {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #f57c00;
+  border: 2px solid #ffc107;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid var(--color-primary);
+  background-color: #ffffff;
+  color: var(--color-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-duration) var(--transition-easing);
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button.primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.button.primary:hover:not(:disabled) {
+  background-color: #333333;
+}
+
+.emptyState {
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: 14px;
+  padding: 20px;
+}
+
+/* RTL support */
+.container.rtl {
+  direction: rtl;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .container {
+    padding: 12px;
+  }
+
+  .wordsContainer,
+  .solutionContainer {
+    padding: 8px;
+  }
+
+  .button {
+    padding: 10px 20px;
+    font-size: 12px;
+  }
+}

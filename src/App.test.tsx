@@ -8,16 +8,16 @@ test('renders Proverb Pile title', () => {
   expect(titleElement).toBeInTheDocument();
 });
 
-test('renders puzzle progress', () => {
+test('renders instruction to separate words', () => {
   render(<App />);
-  const progressElement = screen.getByText(/Puzzle 1 of/i);
-  expect(progressElement).toBeInTheDocument();
+  const instructionElement = screen.getByText(/Drag words from the available pool/i);
+  expect(instructionElement).toBeInTheDocument();
 });
 
-test('renders build the proverb section', () => {
+test('renders proverbs section', () => {
   render(<App />);
-  const buildElement = screen.getByText(/Build the proverb/i);
-  expect(buildElement).toBeInTheDocument();
+  const proverbsElement = screen.getByText(/^Proverbs$/i);
+  expect(proverbsElement).toBeInTheDocument();
 });
 
 test('renders available words section', () => {

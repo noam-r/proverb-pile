@@ -25,12 +25,12 @@ const initializeProverbStates = (puzzleData: PuzzleData): ProverbState[] => {
 };
 
 /**
- * Main game state hook
+ * Main game state hook - All proverbs are solved in a single stage
  */
 export const useGameState = (fallbackPuzzle?: PuzzleData) => {
   const [gameState, setGameState] = useState<GameState>({
     puzzleData: null,
-    currentProverbIndex: 0,
+    currentProverbIndex: 0, // Keep for compatibility but always 0
     proverbStates: [],
     isCompleted: false,
     error: null,
@@ -66,12 +66,16 @@ export const useGameState = (fallbackPuzzle?: PuzzleData) => {
   }, [fallbackPuzzle]);
 
   /**
-   * Moves a word to a target position
+   * Moves a word to a target position in a specific proverb
    */
   const handleMoveWord = useCallback(
-    (wordIndex: number, targetIndex: number | null) => {
+    (
+      proverbIndex: number,
+      wordIndex: number,
+      targetIndex: number | null
+    ) => {
       setGameState(prev => {
-        const currentState = prev.proverbStates[prev.currentProverbIndex];
+        const currentState = prev.proverbStates[proverbIndex];
         const newWordPositions = moveWord(
           currentState.wordPositions,
           wordIndex,
@@ -79,15 +83,21 @@ export const useGameState = (fallbackPuzzle?: PuzzleData) => {
         );
 
         const newProverbStates = [...prev.proverbStates];
-        newProverbStates[prev.currentProverbIndex] = {
+        newProverbStates[proverbIndex] = {
           ...currentState,
           wordPositions: newWordPositions,
           isValidated: false,
         };
 
+        // Reset validation for all proverbs when any word moves
+        const resetValidation = newProverbStates.map(state => ({
+          ...state,
+          isValidated: false,
+        }));
+
         return {
           ...prev,
-          proverbStates: newProverbStates,
+          proverbStates: resetValidation,
         };
       });
     },
@@ -95,22 +105,23 @@ export const useGameState = (fallbackPuzzle?: PuzzleData) => {
   );
 
   /**
-   * Validates current proverb solution
+   * Validates ALL proverb solutions at once
    */
   const handleValidate = useCallback(() => {
     setGameState(prev => {
-      const currentState = prev.proverbStates[prev.currentProverbIndex];
-      const isCorrect = validateSolution(
-        currentState.wordPositions,
-        currentState.proverb.solution
-      );
+      // Validate each proverb
+      const newProverbStates = prev.proverbStates.map(state => {
+        const isCorrect = validateSolution(
+          state.wordPositions,
+          state.proverb.solution
+        );
 
-      const newProverbStates = [...prev.proverbStates];
-      newProverbStates[prev.currentProverbIndex] = {
-        ...currentState,
-        isSolved: isCorrect,
-        isValidated: true,
-      };
+        return {
+          ...state,
+          isSolved: isCorrect,
+          isValidated: true,
+        };
+      });
 
       // Check if all proverbs are solved
       const allSolved = newProverbStates.every(state => state.isSolved);
@@ -124,56 +135,21 @@ export const useGameState = (fallbackPuzzle?: PuzzleData) => {
   }, []);
 
   /**
-   * Moves to the next proverb
+   * Resets all proverbs
    */
-  const handleNextProverb = useCallback(() => {
+  const handleReset = useCallback(() => {
     setGameState(prev => {
-      const nextIndex = prev.currentProverbIndex + 1;
-      if (nextIndex < prev.proverbStates.length) {
-        return {
-          ...prev,
-          currentProverbIndex: nextIndex,
-        };
-      }
-      return prev;
-    });
-  }, []);
-
-  /**
-   * Moves to the previous proverb
-   */
-  const handlePreviousProverb = useCallback(() => {
-    setGameState(prev => {
-      const prevIndex = prev.currentProverbIndex - 1;
-      if (prevIndex >= 0) {
-        return {
-          ...prev,
-          currentProverbIndex: prevIndex,
-        };
-      }
-      return prev;
-    });
-  }, []);
-
-  /**
-   * Resets the current proverb
-   */
-  const handleResetProverb = useCallback(() => {
-    setGameState(prev => {
-      const currentState = prev.proverbStates[prev.currentProverbIndex];
-      const newWordPositions = resetWordPositions(currentState.wordPositions);
-
-      const newProverbStates = [...prev.proverbStates];
-      newProverbStates[prev.currentProverbIndex] = {
-        ...currentState,
-        wordPositions: newWordPositions,
+      const newProverbStates = prev.proverbStates.map(state => ({
+        ...state,
+        wordPositions: resetWordPositions(state.wordPositions),
         isSolved: false,
         isValidated: false,
-      };
+      }));
 
       return {
         ...prev,
         proverbStates: newProverbStates,
+        isCompleted: false,
       };
     });
   }, []);
@@ -195,19 +171,12 @@ export const useGameState = (fallbackPuzzle?: PuzzleData) => {
     });
   }, []);
 
-  // Get current proverb state
-  const currentProverbState =
-    gameState.proverbStates[gameState.currentProverbIndex] || null;
-
   return {
     gameState,
-    currentProverbState,
     actions: {
       moveWord: handleMoveWord,
       validate: handleValidate,
-      nextProverb: handleNextProverb,
-      previousProverb: handlePreviousProverb,
-      resetProverb: handleResetProverb,
+      reset: handleReset,
       resetGame: handleResetGame,
     },
   };

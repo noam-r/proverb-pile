@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { useGameState } from './hooks';
-import { ProverbPuzzle, Modal, CulturalContext } from './components';
+import { MultiProverbPuzzle, Modal, CulturalContext } from './components';
 import samplePuzzles from './data/sample_puzzles.json';
 import { PuzzleData } from './types';
 import './App.css';
 
 function App() {
-  const { gameState, currentProverbState, actions } = useGameState(
-    samplePuzzles as PuzzleData
-  );
+  const { gameState, actions } = useGameState(samplePuzzles as PuzzleData);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProverbIndex, setSelectedProverbIndex] = useState(0);
 
   if (gameState.error) {
     return (
@@ -25,7 +24,7 @@ function App() {
     );
   }
 
-  if (!currentProverbState) {
+  if (gameState.proverbStates.length === 0) {
     return (
       <div className="App">
         <div className="loading-container">
@@ -42,31 +41,35 @@ function App() {
       <header className="App-header">
         <h1>Proverb Pile</h1>
         <p className="subtitle">
-          Reconstruct proverbs from around the world
+          Separate the mixed words into {gameState.proverbStates.length}{' '}
+          proverbs
         </p>
-        <div className="puzzle-progress">
-          Puzzle {gameState.currentProverbIndex + 1} of{' '}
-          {gameState.proverbStates.length}
-        </div>
       </header>
 
       <main>
-        <ProverbPuzzle
-          proverbState={currentProverbState}
+        <MultiProverbPuzzle
+          proverbStates={gameState.proverbStates}
           onMoveWord={actions.moveWord}
           onValidate={actions.validate}
-          onReset={actions.resetProverb}
+          onReset={actions.reset}
           isRTL={isRTL}
         />
 
-        {currentProverbState.isSolved && (
+        {gameState.isCompleted && (
           <div className="cultural-context-prompt">
-            <button
-              className="learn-more-button"
-              onClick={() => setIsModalOpen(true)}
-            >
-              Learn More About This Proverb
-            </button>
+            {gameState.proverbStates.map((state, index) => (
+              <button
+                key={index}
+                className="learn-more-button"
+                onClick={() => {
+                  setSelectedProverbIndex(index);
+                  setIsModalOpen(true);
+                }}
+                style={{ marginRight: '8px', marginBottom: '8px' }}
+              >
+                Learn About Proverb {index + 1}
+              </button>
+            ))}
           </div>
         )}
 
@@ -77,35 +80,15 @@ function App() {
           isRTL={isRTL}
         >
           <CulturalContext
-            proverb={currentProverbState.proverb}
+            proverb={gameState.proverbStates[selectedProverbIndex]?.proverb}
             isRTL={isRTL}
           />
         </Modal>
 
-        {gameState.proverbStates.length > 1 && (
-          <div className="navigation">
-            <button
-              onClick={actions.previousProverb}
-              disabled={gameState.currentProverbIndex === 0}
-            >
-              ← Previous
-            </button>
-            <button
-              onClick={actions.nextProverb}
-              disabled={
-                gameState.currentProverbIndex ===
-                gameState.proverbStates.length - 1
-              }
-            >
-              Next →
-            </button>
-          </div>
-        )}
-
         {gameState.isCompleted && (
           <div className="completion-message">
             <h2>🎉 Congratulations!</h2>
-            <p>You've completed all the proverbs!</p>
+            <p>You've correctly separated all the proverbs!</p>
             <button onClick={actions.resetGame}>Play Again</button>
           </div>
         )}
