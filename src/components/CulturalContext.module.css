@@ -1,0 +1,73 @@
+/* Cultural context component styles */
+
+.container {
+  padding: 0;
+}
+
+.proverb {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  line-height: 1.4;
+  color: #000000;
+  padding: 16px;
+  background-color: #fafafa;
+  border-left: 4px solid #4caf50;
+  border-radius: 4px;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.value {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #000000;
+}
+
+.icon {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.successMessage {
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 24px;
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.successIcon {
+  font-size: 32px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* RTL support */
+.container.rtl {
+  direction: rtl;
+}
+
+.container.rtl .proverb {
+  border-left: none;
+  border-right: 4px solid #4caf50;
+}
+
+.container.rtl .icon {
+  margin-right: 0;
+  margin-left: 8px;
+}

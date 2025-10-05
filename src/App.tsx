@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGameState } from './hooks';
-import { ProverbPuzzle } from './components';
+import { ProverbPuzzle, Modal, CulturalContext } from './components';
 import samplePuzzles from './data/sample_puzzles.json';
 import { PuzzleData } from './types';
 import './App.css';
@@ -9,6 +9,7 @@ function App() {
   const { gameState, currentProverbState, actions } = useGameState(
     samplePuzzles as PuzzleData
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (gameState.error) {
     return (
@@ -59,16 +60,27 @@ function App() {
         />
 
         {currentProverbState.isSolved && (
-          <div className="cultural-context">
-            <h3>About this proverb</h3>
-            <p>
-              <strong>Origin:</strong> {currentProverbState.proverb.culture}
-            </p>
-            <p>
-              <strong>Meaning:</strong> {currentProverbState.proverb.meaning}
-            </p>
+          <div className="cultural-context-prompt">
+            <button
+              className="learn-more-button"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Learn More About This Proverb
+            </button>
           </div>
         )}
+
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title="About This Proverb"
+          isRTL={isRTL}
+        >
+          <CulturalContext
+            proverb={currentProverbState.proverb}
+            isRTL={isRTL}
+          />
+        </Modal>
 
         {gameState.proverbStates.length > 1 && (
           <div className="navigation">
