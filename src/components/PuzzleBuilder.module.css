@@ -1,0 +1,305 @@
+/* Puzzle Builder component styles */
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.description {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.form {
+  background-color: #ffffff;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--color-text);
+}
+
+.languageSelector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.languageOption {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: #ffffff;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 600;
+  transition: all var(--transition-duration) var(--transition-easing);
+}
+
+.languageOption:hover {
+  border-color: var(--color-border-dark);
+  background-color: var(--color-surface);
+}
+
+.languageOption.selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.proverbInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.proverbCard {
+  padding: 20px;
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.proverbHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.proverbNumber {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.removeButton {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 2px solid var(--color-error);
+  background-color: #ffffff;
+  color: var(--color-error);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-duration) var(--transition-easing);
+}
+
+.removeButton:hover {
+  background-color: var(--color-error);
+  color: #ffffff;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--color-text);
+}
+
+.required {
+  color: var(--color-error);
+  margin-left: 4px;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  font-family: var(--font-family);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-duration) var(--transition-easing);
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  margin-top: 4px;
+}
+
+.addButton {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px dashed var(--color-border-dark);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-duration) var(--transition-easing);
+}
+
+.addButton:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background-color: var(--color-surface);
+}
+
+.addButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid var(--color-primary);
+  background-color: #ffffff;
+  color: var(--color-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-duration) var(--transition-easing);
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button.primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.button.primary:hover:not(:disabled) {
+  background-color: #333333;
+}
+
+.output {
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+}
+
+.outputTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.urlContainer {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.urlInput {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: monospace;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: #ffffff;
+}
+
+.copyButton {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid var(--color-success);
+  background-color: var(--color-success);
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-duration) var(--transition-easing);
+  white-space: nowrap;
+}
+
+.copyButton:hover {
+  background-color: var(--color-success-dark);
+}
+
+.copyButton.copied {
+  background-color: var(--color-success-dark);
+}
+
+.error {
+  padding: 12px 16px;
+  background-color: var(--color-error-bg);
+  border: 2px solid var(--color-error);
+  border-radius: var(--radius-sm);
+  color: var(--color-error-dark);
+  margin-bottom: 16px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 12px;
+  }
+
+  .form,
+  .output {
+    padding: 16px;
+  }
+
+  .urlContainer {
+    flex-direction: column;
+  }
+
+  .copyButton {
+    width: 100%;
+  }
+}
