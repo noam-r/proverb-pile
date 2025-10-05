@@ -1,46 +1,98 @@
-# Getting Started with Create React App
+# Proverb Pile
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A minimalist, stateless word puzzle game where players drag-and-drop scrambled words to reconstruct proverbs from multiple cultures.
 
-## Available Scripts
+## 🎯 Features
 
-In the project directory, you can run:
+- **Stateless Puzzle Delivery**: Puzzles loaded via Base64-encoded URL parameters
+- **Multilingual Support**: Initial support for English and Hebrew
+- **Drag-and-Drop Interface**: Intuitive word rearrangement mechanics
+- **Cultural Context**: Learn about proverbs from different cultures
+- **NYT-Style Minimalist Design**: Clean, accessible interface
 
-### `npm start`
+## 🚀 Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Prerequisites
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Node.js 18+ and npm
 
-### `npm test`
+### Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm install
+```
 
-### `npm run build`
+### Development
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Runs the app in development mode at [http://localhost:3000](http://localhost:3000).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Testing
 
-### `npm run eject`
+```bash
+npm test
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Runs the test suite with coverage.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Build
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+npm run build
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Builds the app for production to the `build` folder.
 
-## Learn More
+### Deploy
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm run deploy
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Deploys the app to GitHub Pages.
+
+## 📂 Project Structure
+
+```
+src/
+  components/     # React components
+  hooks/          # Custom React hooks
+  utils/          # Utility functions
+  types/          # TypeScript type definitions
+  styles/         # CSS modules and styles
+  tests/          # Test files
+```
+
+## 🛠️ Technology Stack
+
+- **Frontend**: React 18+ with TypeScript
+- **State Management**: React Hooks
+- **Styling**: CSS Modules
+- **Testing**: Jest + React Testing Library
+- **Deployment**: GitHub Pages
+- **CI/CD**: GitHub Actions
+
+## 📝 Development Plan
+
+See [DEVELOPMENT_PLAN.md](../DEVELOPMENT_PLAN.md) for the complete development roadmap.
+
+## 📊 Performance Goals
+
+- Load time: < 1 second
+- Lighthouse performance score: > 90
+- Test coverage: > 90%
+- WCAG 2.1 AA accessibility compliance
+
+## 🤝 Contributing
+
+1. Follow the TypeScript and ESLint configurations
+2. Write tests for new features
+3. Ensure accessibility standards are met
+4. Use Prettier for code formatting
+
+---
+
+Generated with [Claude Code](https://claude.com/claude-code)

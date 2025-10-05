@@ -1,6 +1,7 @@
 {
   "name": "proverb-pile-app",
   "version": "0.1.0",
+  "homepage": "https://yourusername.github.io/proverb-pile",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
@@ -21,7 +22,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -43,6 +46,7 @@
   },
   "devDependencies": {
     "eslint-config-prettier": "^10.1.8",
+    "gh-pages": "^6.3.0",
     "prettier": "^3.6.2"
   }
 }
