@@ -1,0 +1,66 @@
+/* Drop zone component styles */
+
+.dropZone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  min-height: 48px;
+  padding: 4px;
+  margin: 4px;
+  background-color: #ffffff;
+  border: 2px dashed #cccccc;
+  border-radius: 4px;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropZone.empty {
+  background-color: #fafafa;
+}
+
+.dropZone.dragOver {
+  background-color: #f0f0f0;
+  border-color: #000000;
+  border-style: solid;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.dropZone.filled {
+  border-style: solid;
+  border-color: #666666;
+  background-color: #f9f9f9;
+}
+
+.dropZone:focus {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+/* Validation states */
+.dropZone.correct {
+  border-color: #4caf50;
+  background-color: rgba(76, 175, 80, 0.05);
+}
+
+.dropZone.incorrect {
+  border-color: #f44336;
+  background-color: rgba(244, 67, 54, 0.05);
+  animation: shake 300ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-4px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(4px);
+  }
+}
+
+/* RTL support */
+.dropZone.rtl {
+  direction: rtl;
+}
