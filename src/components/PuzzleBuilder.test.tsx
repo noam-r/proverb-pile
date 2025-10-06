@@ -55,17 +55,17 @@ describe('PuzzleBuilder', () => {
   it('allows adding a fourth proverb', () => {
     render(<PuzzleBuilder />);
 
-    const addButton = screen.getByText('Add 4th Proverb');
+    const addButton = screen.getByText('+ Add Another Proverb (Optional)');
     fireEvent.click(addButton);
 
     expect(screen.getByText('Proverb 4')).toBeInTheDocument();
-    expect(screen.queryByText('Add 4th Proverb')).not.toBeInTheDocument();
+    expect(screen.queryByText('+ Add Another Proverb (Optional)')).not.toBeInTheDocument();
   });
 
   it('allows removing the fourth proverb', () => {
     render(<PuzzleBuilder />);
 
-    const addButton = screen.getByText('Add 4th Proverb');
+    const addButton = screen.getByText('+ Add Another Proverb (Optional)');
     fireEvent.click(addButton);
 
     expect(screen.getByText('Proverb 4')).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe('PuzzleBuilder', () => {
     fireEvent.click(removeButton);
 
     expect(screen.queryByText('Proverb 4')).not.toBeInTheDocument();
-    expect(screen.getByText('Add 4th Proverb')).toBeInTheDocument();
+    expect(screen.getByText('+ Add Another Proverb (Optional)')).toBeInTheDocument();
   });
 
   it('has input fields for solution, culture, and meaning', () => {

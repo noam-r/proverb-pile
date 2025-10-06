@@ -70,6 +70,11 @@ interface Translations {
   errorAllMeanings: string;
   errorMinWords: (n: number, count: number) => string;
   errorMaxWords: (n: number, count: number) => string;
+  decodeLabel: string;
+  decodeDescription: string;
+  decodePlaceholder: string;
+  decodeButton: string;
+  errorDecoding: string;
 }
 
 const translations: Record<LanguageCode, Translations> = {
@@ -139,6 +144,11 @@ const translations: Record<LanguageCode, Translations> = {
     errorAllMeanings: 'All proverbs must have a meaning',
     errorMinWords: (n: number, count: number) => `Proverb ${n} must have at least 3 words (currently has ${count})`,
     errorMaxWords: (n: number, count: number) => `Proverb ${n} must have at most 10 words (currently has ${count})`,
+    decodeLabel: 'Load Existing Puzzle',
+    decodeDescription: 'Paste an encoded puzzle or URL to edit it',
+    decodePlaceholder: 'Paste encoded puzzle string or full URL here...',
+    decodeButton: 'Load Puzzle',
+    errorDecoding: 'Failed to decode puzzle. Please check the input.',
   },
   he: {
     // Header
@@ -206,6 +216,11 @@ const translations: Record<LanguageCode, Translations> = {
     errorAllMeanings: 'כל הפתגמים חייבים להכיל משמעות',
     errorMinWords: (n: number, count: number) => `פתגם ${n} חייב להכיל לפחות 3 מילים (כרגע יש ${count})`,
     errorMaxWords: (n: number, count: number) => `פתגם ${n} חייב להכיל לכל היותר 10 מילים (כרגע יש ${count})`,
+    decodeLabel: 'טען חידה קיימת',
+    decodeDescription: 'הדבק חידה מקודדת או קישור לעריכה',
+    decodePlaceholder: 'הדבק כאן מחרוזת מקודדת או קישור מלא...',
+    decodeButton: 'טען חידה',
+    errorDecoding: 'פענוח החידה נכשל. אנא בדוק את הקלט.',
   },
 };
 

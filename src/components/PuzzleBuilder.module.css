@@ -225,6 +225,40 @@
   background-color: #333333;
 }
 
+.button.secondary {
+  background-color: #ffffff;
+  border-color: var(--color-text-secondary);
+  color: var(--color-text-secondary);
+}
+
+.button.secondary:hover:not(:disabled) {
+  background-color: var(--color-text-secondary);
+  color: #ffffff;
+}
+
+.decodeContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.decodeInput {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: monospace;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color var(--transition-duration) var(--transition-easing);
+}
+
+.decodeInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
 .output {
   background-color: var(--color-surface);
   border: 2px solid var(--color-border);

@@ -4,7 +4,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { PuzzleData, Proverb, LanguageCode } from '../types';
-import { encodePuzzle, validatePuzzle, shuffleArray, getTranslations } from '../utils';
+import { encodePuzzle, decodePuzzle, validatePuzzle, shuffleArray, getTranslations } from '../utils';
 import styles from './PuzzleBuilder.module.css';
 
 interface ProverbInput {
@@ -23,6 +23,7 @@ export const PuzzleBuilder: React.FC = () => {
   const [generatedURL, setGeneratedURL] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [copied, setCopied] = useState(false);
+  const [decodeInput, setDecodeInput] = useState<string>('');
 
   // Get translations and RTL setting based on selected language
   const t = useMemo(() => getTranslations(language), [language]);
@@ -152,6 +153,56 @@ export const PuzzleBuilder: React.FC = () => {
     setError('');
   }, []);
 
+  const handleDecode = useCallback(() => {
+    try {
+      setError('');
+
+      if (!decodeInput.trim()) {
+        return;
+      }
+
+      // Extract encoded string from input
+      // Could be a full URL or just the encoded string
+      let encodedString = decodeInput.trim();
+
+      // If it's a URL, extract the puzzle parameter
+      if (encodedString.includes('?puzzle=')) {
+        const url = new URL(encodedString);
+        encodedString = url.searchParams.get('puzzle') || '';
+      } else if (encodedString.includes('puzzle=')) {
+        // Handle case where user pastes just the query string
+        const params = new URLSearchParams(encodedString);
+        encodedString = params.get('puzzle') || encodedString;
+      }
+
+      // Decode the puzzle
+      const puzzleData = decodePuzzle(encodedString);
+
+      // Validate the decoded puzzle
+      const validation = validatePuzzle(puzzleData);
+      if (!validation.isValid) {
+        throw new Error(validation.error);
+      }
+
+      // Load the puzzle data into the form
+      setLanguage(puzzleData.language);
+
+      const loadedProverbs: ProverbInput[] = puzzleData.proverbs.map(p => ({
+        solution: p.solution,
+        culture: p.culture,
+        meaning: p.meaning,
+      }));
+
+      setProverbs(loadedProverbs);
+      setDecodeInput('');
+      setGeneratedURL('');
+    } catch (err) {
+      setError(
+        t.errorDecoding + ' ' + (err instanceof Error ? err.message : '')
+      );
+    }
+  }, [decodeInput, t]);
+
   return (
     <div className={styles.container} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className={styles.header}>
@@ -181,6 +232,29 @@ export const PuzzleBuilder: React.FC = () => {
               onClick={() => setLanguage('he')}
             >
               {t.hebrew}
+            </button>
+          </div>
+        </div>
+
+        {/* Decode Section */}
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>{t.decodeLabel}</div>
+          <p className={styles.hint}>{t.decodeDescription}</p>
+          <div className={styles.decodeContainer}>
+            <textarea
+              className={styles.decodeInput}
+              value={decodeInput}
+              onChange={e => setDecodeInput(e.target.value)}
+              placeholder={t.decodePlaceholder}
+              rows={3}
+              dir={isRTL ? 'rtl' : 'ltr'}
+            />
+            <button
+              className={`${styles.button} ${styles.secondary}`}
+              onClick={handleDecode}
+              disabled={!decodeInput.trim()}
+            >
+              {t.decodeButton}
             </button>
           </div>
         </div>

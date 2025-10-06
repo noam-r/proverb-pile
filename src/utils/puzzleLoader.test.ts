@@ -119,30 +119,30 @@ describe('validatePuzzle', () => {
     expect(result.error).toContain('number of proverbs');
   });
 
-  it('should reject proverb with invalid ID pattern', () => {
-    const invalid = {
+  it('should auto-generate ID if missing', () => {
+    const puzzleWithoutId = {
       ...validPuzzle,
       proverbs: [
-        { ...validPuzzle.proverbs[0], id: 'Invalid ID!' },
+        { ...validPuzzle.proverbs[0], id: undefined },
         ...validPuzzle.proverbs.slice(1),
       ],
     };
-    const result = validatePuzzle(invalid);
-    expect(result.isValid).toBe(false);
-    expect(result.error).toContain('ID must contain only');
+    const result = validatePuzzle(puzzleWithoutId);
+    expect(result.isValid).toBe(true);
+    expect(puzzleWithoutId.proverbs[0].id).toBeDefined();
   });
 
-  it('should reject proverb with too few words', () => {
+  it('should reject proverb with too few words (less than 3)', () => {
     const invalid = {
       ...validPuzzle,
       proverbs: [
-        { ...validPuzzle.proverbs[0], words: ['too', 'few', 'words'] },
+        { ...validPuzzle.proverbs[0], solution: 'too few' }, // only 2 words
         ...validPuzzle.proverbs.slice(1),
       ],
     };
     const result = validatePuzzle(invalid);
     expect(result.isValid).toBe(false);
-    expect(result.error).toContain('5-10 words');
+    expect(result.error).toContain('3-10 words');
   });
 });
 
