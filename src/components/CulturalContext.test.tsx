@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { CulturalContext } from './CulturalContext';
+import { getTranslations } from '../utils';
 import type { Proverb } from '../types';
 
 const mockProverb: Proverb = {
@@ -11,34 +12,36 @@ const mockProverb: Proverb = {
   meaning: 'Something you have is better than something you might get',
 };
 
+const mockTranslations = getTranslations('en');
+
 describe('CulturalContext', () => {
   it('renders the proverb solution', () => {
-    render(<CulturalContext proverb={mockProverb} />);
+    render(<CulturalContext proverb={mockProverb} translations={mockTranslations} />);
 
     expect(screen.getByText(/"A bird in hand"/)).toBeInTheDocument();
   });
 
   it('renders the culture/origin', () => {
-    render(<CulturalContext proverb={mockProverb} />);
+    render(<CulturalContext proverb={mockProverb} translations={mockTranslations} />);
 
     expect(screen.getByText(/English/)).toBeInTheDocument();
   });
 
   it('renders the meaning', () => {
-    render(<CulturalContext proverb={mockProverb} />);
+    render(<CulturalContext proverb={mockProverb} translations={mockTranslations} />);
 
     expect(screen.getByText(/Something you have is better than something you might get/)).toBeInTheDocument();
   });
 
   it('renders section headers', () => {
-    render(<CulturalContext proverb={mockProverb} />);
+    render(<CulturalContext proverb={mockProverb} translations={mockTranslations} />);
 
     expect(screen.getByText(/Origin/)).toBeInTheDocument();
     expect(screen.getByText(/Meaning/)).toBeInTheDocument();
   });
 
   it('applies correct CSS class', () => {
-    const { container } = render(<CulturalContext proverb={mockProverb} />);
+    const { container } = render(<CulturalContext proverb={mockProverb} translations={mockTranslations} />);
 
     // Component uses CSS modules, so we check for the container class
     expect(container.querySelector('[class*="container"]')).toBeInTheDocument();
@@ -53,7 +56,8 @@ describe('CulturalContext', () => {
       meaning: 'Hello world',
     };
 
-    render(<CulturalContext proverb={hebrewProverb} />);
+    const hebrewTranslations = getTranslations('he');
+    render(<CulturalContext proverb={hebrewProverb} translations={hebrewTranslations} />);
 
     expect(screen.getByText(/"שלום עולם"/)).toBeInTheDocument();
     expect(screen.getByText(/Hebrew/)).toBeInTheDocument();
@@ -67,7 +71,7 @@ describe('CulturalContext', () => {
       meaning: longMeaning,
     };
 
-    render(<CulturalContext proverb={proverbWithLongMeaning} />);
+    render(<CulturalContext proverb={proverbWithLongMeaning} translations={mockTranslations} />);
 
     expect(screen.getByText(longMeaning)).toBeInTheDocument();
   });
@@ -78,7 +82,7 @@ describe('CulturalContext', () => {
       culture: 'Chinese (Mandarin)',
     };
 
-    render(<CulturalContext proverb={specialProverb} />);
+    render(<CulturalContext proverb={specialProverb} translations={mockTranslations} />);
 
     expect(screen.getByText(/Chinese \(Mandarin\)/)).toBeInTheDocument();
   });

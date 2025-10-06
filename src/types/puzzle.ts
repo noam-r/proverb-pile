@@ -6,10 +6,16 @@
 export type LanguageCode = 'en' | 'he';
 
 export interface Proverb {
-  /** Unique identifier for the proverb */
-  id: string;
-  /** Scrambled words for the proverb */
-  words: string[];
+  /**
+   * Unique identifier for the proverb (optional, auto-generated if not provided)
+   * Will be generated as a URL-safe slug from the solution
+   */
+  id?: string;
+  /**
+   * @deprecated Scrambled words array (optional, derived from solution if not provided)
+   * Kept for backward compatibility but no longer necessary
+   */
+  words?: string[];
   /** Correct proverb text */
   solution: string;
   /** Country or cultural origin of the proverb */
@@ -40,6 +46,30 @@ export interface WordPosition {
 }
 
 /**
+ * Represents a word that can be placed in any proverb
+ * Used in the new multi-proverb architecture
+ */
+export interface GlobalWord {
+  /** Unique identifier for this word instance */
+  id: string;
+  /** The word text */
+  text: string;
+  /** Which proverb this word originally came from */
+  sourceProverbIndex: number;
+  /** Original index in the source proverb's word array */
+  originalIndex: number;
+  /** Current placement (null if in available pool) */
+  placement: {
+    /** Which proverb it's placed in */
+    proverbIndex: number;
+    /** Position within that proverb (0-based) */
+    positionIndex: number;
+  } | null;
+  /** Whether this word is locked (cannot be moved) */
+  isLocked: boolean;
+}
+
+/**
  * Game state for a single proverb
  */
 export interface ProverbState {
@@ -67,6 +97,27 @@ export interface GameState {
   isCompleted: boolean;
   /** Error message if puzzle failed to load */
   error: string | null;
+}
+
+/**
+ * New game state architecture that supports cross-proverb word movement
+ */
+export interface MultiProverbGameState {
+  /** The loaded puzzle data */
+  puzzleData: PuzzleData | null;
+  /** All words from all proverbs in a global pool */
+  allWords: GlobalWord[];
+  /** Validation state for each proverb */
+  proverbValidation: {
+    isSolved: boolean;
+    isValidated: boolean;
+  }[];
+  /** Whether all proverbs are completed */
+  isCompleted: boolean;
+  /** Error message if puzzle failed to load */
+  error: string | null;
+  /** Number of hints remaining (max 2) */
+  hintsRemaining: number;
 }
 
 /**

@@ -101,12 +101,12 @@
 
 .proverbStatus.correct {
   color: var(--color-success-dark);
-  background-color: rgba(76, 175, 80, 0.2);
+  background-color: var(--color-success-bg);
 }
 
 .proverbStatus.wrong {
   color: var(--color-error-dark);
-  background-color: rgba(244, 67, 54, 0.2);
+  background-color: var(--color-error-bg);
 }
 
 .solutionContainer {
@@ -142,9 +142,9 @@
 }
 
 .status.partial {
-  background-color: rgba(255, 193, 7, 0.1);
-  color: #f57c00;
-  border: 2px solid #ffc107;
+  background-color: #f5f5f5;
+  color: #000000;
+  border: 2px solid #666666;
 }
 
 /* Controls */

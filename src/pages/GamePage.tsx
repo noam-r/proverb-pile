@@ -1,103 +1,138 @@
 /**
- * Game Page - Main puzzle game
+ * Game Page - Main puzzle game (V2 with new architecture)
  */
 
-import React, { useState } from 'react';
-import { useGameState } from '../hooks';
-import { MultiProverbPuzzle, Modal, CulturalContext } from '../components';
-import samplePuzzles from '../data/sample_puzzles.json';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useMultiProverbGameState } from '../hooks/useMultiProverbGameState';
+import { MultiProverbPuzzleV2 } from '../components/MultiProverbPuzzleV2';
+import { Modal, CulturalContext } from '../components';
+import hebrewPuzzles from '../data/hebrew_puzzles.json';
 import { PuzzleData } from '../types';
+import { getTranslations } from '../utils';
+import { decodePuzzle, validatePuzzle } from '../utils/puzzleLoader';
 
 export const GamePage: React.FC = () => {
-  const { gameState, actions } = useGameState(samplePuzzles as PuzzleData);
+  // Load puzzle from URL parameter or use default Hebrew puzzles
+  const puzzleData = useMemo(() => {
+    const params = new URLSearchParams(window.location.search);
+    const encodedPuzzle = params.get('puzzle');
+
+    if (encodedPuzzle) {
+      try {
+        const decoded = decodePuzzle(encodedPuzzle);
+        const validation = validatePuzzle(decoded);
+
+        if (validation.isValid) {
+          return decoded as PuzzleData;
+        } else {
+          // eslint-disable-next-line no-console
+          console.error('Invalid puzzle data:', validation.error);
+          return hebrewPuzzles as PuzzleData;
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to decode puzzle:', error);
+        return hebrewPuzzles as PuzzleData;
+      }
+    }
+
+    return hebrewPuzzles as PuzzleData;
+  }, []);
+
+  const {
+    gameState,
+    availableWords,
+    moveWord,
+    removeWord,
+    validate,
+    reset,
+    useHint,
+  } = useMultiProverbGameState(puzzleData);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProverbIndex, setSelectedProverbIndex] = useState(0);
+
+  const language = gameState.puzzleData?.language || 'en';
+  const isRTL = language === 'he';
+  const t = useMemo(() => getTranslations(language as 'en' | 'he'), [language]);
+
+  // Auto-open modal when game is completed
+  useEffect(() => {
+    if (gameState.isCompleted) {
+      setIsModalOpen(true);
+    }
+  }, [gameState.isCompleted]);
 
   if (gameState.error) {
     return (
-      <div className="error-container">
-        <h1>Error Loading Puzzle</h1>
+      <div className="error-container" dir={isRTL ? 'rtl' : 'ltr'}>
+        <h1>{t.errorLoading}</h1>
         <p>{gameState.error}</p>
+        <p>{t.errorMessage}</p>
         <p>
-          Add a puzzle parameter to the URL or check the puzzle format.
-        </p>
-        <p>
-          Or <a href="/#/builder">create your own puzzle</a>!
+          {isRTL ? 'או ' : 'Or '}
+          <a href="/#/builder">{t.orCreate}</a>
+          {isRTL ? '' : '!'}
         </p>
       </div>
     );
   }
 
-  if (gameState.proverbStates.length === 0) {
+  if (!gameState.puzzleData) {
     return (
-      <div className="loading-container">
-        <p>Loading puzzle...</p>
+      <div className="loading-container" dir={isRTL ? 'rtl' : 'ltr'}>
+        <p>{t.loading}</p>
       </div>
     );
   }
-
-  const isRTL = gameState.puzzleData?.language === 'he';
 
   return (
     <>
-      <header className="App-header">
-        <h1>Proverb Pile</h1>
+      <header className="App-header" dir={isRTL ? 'rtl' : 'ltr'}>
+        <h1>{t.appName}</h1>
         <p className="subtitle">
-          Separate the mixed words into {gameState.proverbStates.length}{' '}
-          proverbs
+          {t.subtitle(gameState.puzzleData.proverbs.length)}
         </p>
-        <nav className="nav-links">
-          <a href="/#/builder">Create Puzzle</a>
-        </nav>
       </header>
 
-      <main>
-        <MultiProverbPuzzle
-          proverbStates={gameState.proverbStates}
-          onMoveWord={actions.moveWord}
-          onValidate={actions.validate}
-          onReset={actions.reset}
+      <main dir={isRTL ? 'rtl' : 'ltr'}>
+        <MultiProverbPuzzleV2
+          puzzleData={gameState.puzzleData}
+          allWords={gameState.allWords}
+          availableWords={availableWords}
+          proverbValidation={gameState.proverbValidation}
+          isCompleted={gameState.isCompleted}
+          hintsRemaining={gameState.hintsRemaining}
+          onMoveWord={moveWord}
+          onRemoveWord={removeWord}
+          onValidate={validate}
+          onReset={reset}
+          onUseHint={useHint}
           isRTL={isRTL}
+          translations={t}
         />
-
-        {gameState.isCompleted && (
-          <div className="cultural-context-prompt">
-            {gameState.proverbStates.map((state, index) => (
-              <button
-                key={index}
-                className="learn-more-button"
-                onClick={() => {
-                  setSelectedProverbIndex(index);
-                  setIsModalOpen(true);
-                }}
-                style={{ marginRight: '8px', marginBottom: '8px' }}
-              >
-                Learn About Proverb {index + 1}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title="About This Proverb"
-          isRTL={isRTL}
-        >
-          <CulturalContext
-            proverb={gameState.proverbStates[selectedProverbIndex]?.proverb}
-            isRTL={isRTL}
-          />
-        </Modal>
-
-        {gameState.isCompleted && (
-          <div className="completion-message">
-            <h2>🎉 Congratulations!</h2>
-            <p>You've correctly separated all the proverbs!</p>
-            <button onClick={actions.resetGame}>Play Again</button>
-          </div>
-        )}
       </main>
+
+      <footer className="App-footer" dir={isRTL ? 'rtl' : 'ltr'}>
+        <a href="/#/builder">{t.createPuzzle}</a>
+      </footer>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={t.congratulations}
+        isRTL={isRTL}
+      >
+        <div>
+          {gameState.puzzleData.proverbs.map((proverb, index) => (
+            <CulturalContext
+              key={index}
+              proverb={proverb}
+              isRTL={isRTL}
+              translations={t}
+            />
+          ))}
+        </div>
+      </Modal>
     </>
   );
 };

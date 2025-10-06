@@ -20,3 +20,6 @@ export {
   getPlacedWords,
   resetWordPositions,
 } from './wordUtils';
+
+export { getTranslations } from './translations';
+export type { LanguageCode } from './translations';

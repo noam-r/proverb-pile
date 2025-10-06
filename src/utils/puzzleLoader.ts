@@ -6,13 +6,18 @@ import { PuzzleData } from '../types';
 
 /**
  * Decodes a Base64-encoded puzzle string
+ * Handles Unicode characters (Hebrew, etc.) by decoding from UTF-8
  * @param encodedPuzzle - Base64 encoded puzzle JSON string
  * @returns Decoded puzzle data object
  * @throws Error if decoding fails
  */
 export const decodePuzzle = (encodedPuzzle: string): PuzzleData => {
   try {
-    const decodedString = atob(encodedPuzzle);
+    const binaryString = atob(encodedPuzzle);
+    // Convert binary string to bytes
+    const bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+    // Use TextDecoder to handle Unicode characters properly
+    const decodedString = new TextDecoder().decode(bytes);
     const puzzleData = JSON.parse(decodedString);
     return puzzleData;
   } catch (error) {
@@ -26,12 +31,17 @@ export const decodePuzzle = (encodedPuzzle: string): PuzzleData => {
 
 /**
  * Encodes puzzle data to a Base64 string
+ * Handles Unicode characters (Hebrew, etc.) by first encoding to UTF-8
  * @param puzzleData - Puzzle data object to encode
  * @returns Base64 encoded string
  */
 export const encodePuzzle = (puzzleData: PuzzleData): string => {
   const jsonString = JSON.stringify(puzzleData);
-  return btoa(jsonString);
+  // Use TextEncoder to handle Unicode characters properly
+  const utf8Bytes = new TextEncoder().encode(jsonString);
+  // Convert bytes to binary string
+  const binaryString = Array.from(utf8Bytes, byte => String.fromCharCode(byte)).join('');
+  return btoa(binaryString);
 };
 
 /**
@@ -77,31 +87,32 @@ export const validatePuzzle = (
     };
   }
 
-  // Validate each proverb
+  // Auto-generate IDs and validate each proverb
   for (let i = 0; i < puzzleData.proverbs.length; i++) {
     const proverb = puzzleData.proverbs[i];
 
-    // Check required fields
-    if (!proverb.id) {
-      return { isValid: false, error: `Proverb ${i + 1}: Missing id` };
-    }
-
-    if (!proverb.words || !Array.isArray(proverb.words)) {
-      return {
-        isValid: false,
-        error: `Proverb ${i + 1}: Missing or invalid words array`,
-      };
-    }
-
-    if (proverb.words.length < 5 || proverb.words.length > 10) {
-      return {
-        isValid: false,
-        error: `Proverb ${i + 1}: Words array must contain 5-10 words`,
-      };
-    }
-
     if (!proverb.solution) {
       return { isValid: false, error: `Proverb ${i + 1}: Missing solution` };
+    }
+
+    // Auto-generate ID if not provided
+    if (!proverb.id) {
+      // Create a URL-safe slug from the solution
+      proverb.id = proverb.solution
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '') // Remove punctuation
+        .trim()
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .substring(0, 50); // Limit length
+    }
+
+    // Validate word count from solution (words array is deprecated)
+    const wordCount = proverb.solution.split(/\s+/).length;
+    if (wordCount < 3 || wordCount > 10) {
+      return {
+        isValid: false,
+        error: `Proverb ${i + 1}: Solution must contain 3-10 words, found ${wordCount}`,
+      };
     }
 
     if (!proverb.culture) {
@@ -110,15 +121,6 @@ export const validatePuzzle = (
 
     if (!proverb.meaning) {
       return { isValid: false, error: `Proverb ${i + 1}: Missing meaning` };
-    }
-
-    // Validate ID pattern (alphanumeric and hyphens only)
-    const idPattern = /^[a-z0-9-]+$/;
-    if (!idPattern.test(proverb.id)) {
-      return {
-        isValid: false,
-        error: `Proverb ${i + 1}: ID must contain only lowercase letters, numbers, and hyphens`,
-      };
     }
   }
 

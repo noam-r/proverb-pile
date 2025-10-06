@@ -85,7 +85,7 @@ export const MultiProverbPuzzle: React.FC<MultiProverbPuzzleProps> = ({
   }, []);
 
   const handleDrop = useCallback(
-    (proverbIndex: number, dropIndex: number) => {
+    (targetProverbIndex: number, dropIndex: number) => {
       if (draggedWord) {
         onMoveWord(draggedWord.proverbIndex, draggedWord.wordIndex, dropIndex);
       }
@@ -111,7 +111,7 @@ export const MultiProverbPuzzle: React.FC<MultiProverbPuzzleProps> = ({
     (proverbIndex: number, wordIndex: number) => {
       // Find first empty position in the proverb
       const state = proverbStates[proverbIndex];
-      const maxPosition = state.proverb.words.length;
+      const maxPosition = state.proverb.solution.split(/\s+/).length;
       for (let i = 0; i < maxPosition; i++) {
         const isOccupied = state.wordPositions.some(
           wp => wp.currentIndex === i
@@ -171,17 +171,23 @@ export const MultiProverbPuzzle: React.FC<MultiProverbPuzzleProps> = ({
           <div className={styles.proverbsContainer}>
             {proverbStates.map((state, proverbIndex) => {
               const dropZones = Array.from(
-                { length: state.proverb.words.length },
+                { length: state.proverb.solution.split(/\s+/).length },
                 (_, index) => {
-                  const wordAtPosition = state.wordPositions.find(
-                    wp => wp.currentIndex === index
-                  );
+                  // Find the word at this position and track its actual array index
+                  // This fixes the bug with duplicate words (like "the") where indexOf
+                  // would return the wrong word's index
+                  let actualWordIndex: number | null = null;
+                  const wordAtPosition = state.wordPositions.find((wp, idx) => {
+                    if (wp.currentIndex === index) {
+                      actualWordIndex = idx;
+                      return true;
+                    }
+                    return false;
+                  });
                   return {
                     index,
                     word: wordAtPosition?.word || null,
-                    wordIndex: wordAtPosition
-                      ? state.wordPositions.indexOf(wordAtPosition)
-                      : null,
+                    wordIndex: actualWordIndex,
                   };
                 }
               );

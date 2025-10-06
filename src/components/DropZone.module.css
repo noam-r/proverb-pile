@@ -1,17 +1,17 @@
-/* Drop zone component styles */
+/* Drop zone component styles - Modern pill design */
 
 .dropZone {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 80px;
-  min-height: 48px;
+  min-width: 85px;
+  min-height: 46px;
   padding: 4px;
-  margin: 4px;
-  background-color: #ffffff;
-  border: 2px dashed #cccccc;
-  border-radius: 4px;
-  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 6px;
+  background-color: #fafafa;
+  border: 1px dashed #d0d0d0;
+  border-radius: 20px;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dropZone.empty {
@@ -20,15 +20,15 @@
 
 .dropZone.dragOver {
   background-color: #f0f0f0;
-  border-color: #000000;
+  border-color: #666666;
   border-style: solid;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
 }
 
 .dropZone.filled {
   border-style: solid;
-  border-color: #666666;
-  background-color: #f9f9f9;
+  border-color: transparent;
+  background-color: transparent;
 }
 
 .dropZone:focus {
@@ -36,15 +36,22 @@
   outline-offset: 2px;
 }
 
+/* Locked state */
+.dropZone.locked {
+  border-style: solid;
+  border-color: transparent;
+  background-color: transparent;
+}
+
 /* Validation states */
 .dropZone.correct {
-  border-color: #4caf50;
-  background-color: rgba(76, 175, 80, 0.05);
+  border-color: #000000;
+  background-color: #f5f5f5;
 }
 
 .dropZone.incorrect {
-  border-color: #f44336;
-  background-color: rgba(244, 67, 54, 0.05);
+  border-color: #000000;
+  background-color: #f5f5f5;
   animation: shake 300ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 

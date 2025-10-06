@@ -4,57 +4,41 @@
   padding: 0;
 }
 
+.container + .container {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid #e0e0e0;
+}
+
 .proverb {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
-  margin-bottom: 24px;
-  line-height: 1.4;
+  margin-bottom: 20px;
+  line-height: 1.5;
   color: #000000;
-  padding: 16px;
-  background-color: #fafafa;
-  border-left: 4px solid #4caf50;
-  border-radius: 4px;
+  padding: 16px 20px;
+  background-color: #f5f5f5;
+  border-left: 3px solid #000000;
+  border-radius: 8px;
 }
 
 .section {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  color: #666666;
+  color: #999999;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
 }
 
 .value {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.6;
-  color: #000000;
-}
-
-.icon {
-  display: inline-block;
-  margin-right: 8px;
-}
-
-.successMessage {
-  text-align: center;
-  padding: 20px;
-  margin-bottom: 24px;
-  background-color: rgba(76, 175, 80, 0.1);
-  border: 2px solid #4caf50;
-  border-radius: 8px;
-  color: #2e7d32;
-  font-weight: 600;
-}
-
-.successIcon {
-  font-size: 32px;
-  margin-bottom: 8px;
-  display: block;
+  color: #333333;
 }
 
 /* RTL support */
@@ -64,10 +48,5 @@
 
 .container.rtl .proverb {
   border-left: none;
-  border-right: 4px solid #4caf50;
-}
-
-.container.rtl .icon {
-  margin-right: 0;
-  margin-left: 8px;
+  border-right: 3px solid #000000;
 }

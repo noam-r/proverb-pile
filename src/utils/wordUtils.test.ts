@@ -46,7 +46,8 @@ describe('shuffleArray', () => {
 describe('initializeWordPositions', () => {
   it('should create word positions for all words', () => {
     const positions = initializeWordPositions(testProverb);
-    expect(positions.length).toBe(testProverb.words.length);
+    const wordCount = testProverb.solution.split(/\s+/).length;
+    expect(positions.length).toBe(wordCount);
   });
 
   it('should set all currentIndex to null', () => {
@@ -59,7 +60,7 @@ describe('initializeWordPositions', () => {
   it('should include all words from proverb', () => {
     const positions = initializeWordPositions(testProverb);
     const words = positions.map(p => p.word).sort();
-    const originalWords = [...testProverb.words].sort();
+    const originalWords = testProverb.solution.split(/\s+/).sort();
     expect(words).toEqual(originalWords);
   });
 });

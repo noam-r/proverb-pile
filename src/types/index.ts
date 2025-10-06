@@ -9,5 +9,7 @@ export type {
   WordPosition,
   ProverbState,
   GameState,
+  GlobalWord,
+  MultiProverbGameState,
   DragData,
 } from './puzzle';

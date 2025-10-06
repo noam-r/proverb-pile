@@ -1,0 +1,21 @@
+{
+  "version": "1",
+  "language": "he",
+  "proverbs": [
+    {
+      "solution": "העץ נופל לכיוון שהוא נוטה",
+      "culture": "עברית",
+      "meaning": "People tend to follow their natural inclinations - the tree falls in the direction it leans"
+    },
+    {
+      "solution": "הבוקר חכם מן הערב",
+      "culture": "עברית",
+      "meaning": "Morning is wiser than evening - it's better to make decisions with a fresh mind"
+    },
+    {
+      "solution": "יד רוחצת יד",
+      "culture": "עברית",
+      "meaning": "One hand washes the other - mutual help and cooperation"
+    }
+  ]
+}

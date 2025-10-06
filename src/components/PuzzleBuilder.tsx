@@ -2,9 +2,9 @@
  * Puzzle Builder component for creating custom puzzles
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { PuzzleData, Proverb, LanguageCode } from '../types';
-import { encodePuzzle, validatePuzzle, shuffleArray } from '../utils';
+import { encodePuzzle, validatePuzzle, shuffleArray, getTranslations } from '../utils';
 import styles from './PuzzleBuilder.module.css';
 
 interface ProverbInput {
@@ -23,6 +23,10 @@ export const PuzzleBuilder: React.FC = () => {
   const [generatedURL, setGeneratedURL] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [copied, setCopied] = useState(false);
+
+  // Get translations and RTL setting based on selected language
+  const t = useMemo(() => getTranslations(language), [language]);
+  const isRTL = language === 'he';
 
   const handleProverbChange = useCallback(
     (index: number, field: keyof ProverbInput, value: string) => {
@@ -74,31 +78,27 @@ export const PuzzleBuilder: React.FC = () => {
 
       // Validate inputs
       if (proverbs.some(p => !p.solution.trim())) {
-        throw new Error('All proverbs must have a solution text');
+        throw new Error(t.errorAllSolutions);
       }
 
       if (proverbs.some(p => !p.culture.trim())) {
-        throw new Error('All proverbs must have a culture/origin');
+        throw new Error(t.errorAllCultures);
       }
 
       if (proverbs.some(p => !p.meaning.trim())) {
-        throw new Error('All proverbs must have a meaning');
+        throw new Error(t.errorAllMeanings);
       }
 
       // Create puzzle data
       const puzzleProverbs: Proverb[] = proverbs.map((p, index) => {
         const words = tokenizeWords(p.solution);
 
-        if (words.length < 5) {
-          throw new Error(
-            `Proverb ${index + 1} must have at least 5 words (currently has ${words.length})`
-          );
+        if (words.length < 3) {
+          throw new Error(t.errorMinWords(index + 1, words.length));
         }
 
         if (words.length > 10) {
-          throw new Error(
-            `Proverb ${index + 1} must have at most 10 words (currently has ${words.length})`
-          );
+          throw new Error(t.errorMaxWords(index + 1, words.length));
         }
 
         return {
@@ -133,7 +133,7 @@ export const PuzzleBuilder: React.FC = () => {
         err instanceof Error ? err.message : 'Failed to generate puzzle'
       );
     }
-  }, [language, proverbs]);
+  }, [language, proverbs, t]);
 
   const handleCopyURL = useCallback(() => {
     navigator.clipboard.writeText(generatedURL).then(() => {
@@ -153,19 +153,18 @@ export const PuzzleBuilder: React.FC = () => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Puzzle Builder</h1>
+        <h1 className={styles.title}>{t.puzzleBuilder}</h1>
         <p className={styles.description}>
-          Create your own Proverb Pile puzzle by entering 3-4 proverbs. Words
-          will be automatically shuffled and encoded into a shareable URL.
+          {t.builderDescription}
         </p>
       </div>
 
       <div className={styles.form}>
         {/* Language Selection */}
         <div className={styles.section}>
-          <div className={styles.sectionTitle}>Language</div>
+          <div className={styles.sectionTitle}>{t.languageLabel}</div>
           <div className={styles.languageSelector}>
             <button
               className={`${styles.languageOption} ${
@@ -173,7 +172,7 @@ export const PuzzleBuilder: React.FC = () => {
               }`}
               onClick={() => setLanguage('en')}
             >
-              English
+              {t.english}
             </button>
             <button
               className={`${styles.languageOption} ${
@@ -181,34 +180,34 @@ export const PuzzleBuilder: React.FC = () => {
               }`}
               onClick={() => setLanguage('he')}
             >
-              Hebrew (עברית)
+              {t.hebrew}
             </button>
           </div>
         </div>
 
         {/* Proverb Inputs */}
         <div className={styles.section}>
-          <div className={styles.sectionTitle}>Proverbs</div>
+          <div className={styles.sectionTitle}>{t.proverbsLabel}</div>
           <div className={styles.proverbInputs}>
             {proverbs.map((proverb, index) => (
               <div key={index} className={styles.proverbCard}>
                 <div className={styles.proverbHeader}>
                   <span className={styles.proverbNumber}>
-                    Proverb {index + 1}
+                    {t.proverbNumber(index + 1)}
                   </span>
                   {proverbs.length > 3 && (
                     <button
                       className={styles.removeButton}
                       onClick={() => handleRemoveProverb(index)}
                     >
-                      Remove
+                      {t.remove}
                     </button>
                   )}
                 </div>
 
                 <div className={styles.formGroup}>
                   <label className={styles.label}>
-                    Proverb Text<span className={styles.required}>*</span>
+                    {t.proverbText}<span className={styles.required}>*</span>
                   </label>
                   <input
                     type="text"
@@ -217,14 +216,15 @@ export const PuzzleBuilder: React.FC = () => {
                     onChange={e =>
                       handleProverbChange(index, 'solution', e.target.value)
                     }
-                    placeholder="e.g., Don't bite the hand that feeds you"
+                    placeholder={t.proverbPlaceholder}
+                    dir={isRTL ? 'rtl' : 'ltr'}
                   />
-                  <div className={styles.hint}>5-10 words required</div>
+                  <div className={styles.hint}>{t.wordsRequired}</div>
                 </div>
 
                 <div className={styles.formGroup}>
                   <label className={styles.label}>
-                    Culture/Origin<span className={styles.required}>*</span>
+                    {t.cultureOrigin}<span className={styles.required}>*</span>
                   </label>
                   <input
                     type="text"
@@ -233,13 +233,14 @@ export const PuzzleBuilder: React.FC = () => {
                     onChange={e =>
                       handleProverbChange(index, 'culture', e.target.value)
                     }
-                    placeholder="e.g., English, Chinese, Indian"
+                    placeholder={t.culturePlaceholder}
+                    dir={isRTL ? 'rtl' : 'ltr'}
                   />
                 </div>
 
                 <div className={styles.formGroup}>
                   <label className={styles.label}>
-                    Meaning<span className={styles.required}>*</span>
+                    {t.meaningLabel}<span className={styles.required}>*</span>
                   </label>
                   <textarea
                     className={styles.textarea}
@@ -247,7 +248,8 @@ export const PuzzleBuilder: React.FC = () => {
                     onChange={e =>
                       handleProverbChange(index, 'meaning', e.target.value)
                     }
-                    placeholder="Explain what the proverb means..."
+                    placeholder={t.meaningPlaceholder}
+                    dir={isRTL ? 'rtl' : 'ltr'}
                   />
                 </div>
               </div>
@@ -258,7 +260,7 @@ export const PuzzleBuilder: React.FC = () => {
                 className={styles.addButton}
                 onClick={handleAddProverb}
               >
-                + Add Another Proverb (Optional)
+                {t.addAnother}
               </button>
             )}
           </div>
@@ -270,10 +272,10 @@ export const PuzzleBuilder: React.FC = () => {
             className={`${styles.button} ${styles.primary}`}
             onClick={handleGenerate}
           >
-            Generate Puzzle URL
+            {t.generateURL}
           </button>
           <button className={styles.button} onClick={handleClear}>
-            Clear All
+            {t.clearAll}
           </button>
         </div>
       </div>
@@ -284,8 +286,8 @@ export const PuzzleBuilder: React.FC = () => {
       {/* Generated URL Output */}
       {generatedURL && (
         <div className={styles.output}>
-          <div className={styles.outputTitle}>✓ Puzzle Generated!</div>
-          <p>Share this URL to let others play your puzzle:</p>
+          <div className={styles.outputTitle}>{t.puzzleGenerated}</div>
+          <p>{t.shareURL}</p>
           <div className={styles.urlContainer}>
             <input
               type="text"
@@ -299,12 +301,12 @@ export const PuzzleBuilder: React.FC = () => {
               }`}
               onClick={handleCopyURL}
             >
-              {copied ? '✓ Copied!' : 'Copy URL'}
+              {copied ? t.copied : t.copy}
             </button>
           </div>
           <p>
             <a href={generatedURL} target="_blank" rel="noopener noreferrer">
-              Preview Puzzle →
+              {isRTL ? '← ' : ''}Preview Puzzle{isRTL ? '' : ' →'}
             </a>
           </p>
         </div>

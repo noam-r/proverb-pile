@@ -3,22 +3,16 @@
   "language": "en",
   "proverbs": [
     {
-      "id": "dont-bite-hand",
-      "words": ["don't", "bite", "the", "hand", "that", "feeds", "you"],
       "solution": "Don't bite the hand that feeds you",
       "culture": "English",
       "meaning": "Don't harm or be ungrateful to those who have helped or supported you"
     },
     {
-      "id": "bird-in-hand",
-      "words": ["a", "bird", "in", "the", "hand", "is", "worth", "two", "in", "the", "bush"],
       "solution": "A bird in the hand is worth two in the bush",
       "culture": "English",
       "meaning": "It's better to have a small but certain advantage than a mere potential of a greater one"
     },
     {
-      "id": "elephant-slip",
-      "words": ["even", "an", "elephant", "can", "slip"],
       "solution": "Even an elephant can slip",
       "culture": "Indian",
       "meaning": "Everyone, no matter how experienced or skilled, can make mistakes"

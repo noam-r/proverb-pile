@@ -13,6 +13,7 @@ interface DropZoneProps {
   isRTL?: boolean;
   isCorrect?: boolean;
   isIncorrect?: boolean;
+  isLocked?: boolean;
   onDrop: (dropIndex: number) => void;
   onWordDragStart: (wordIndex: number) => void;
   onWordDragEnd: () => void;
@@ -27,6 +28,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
   isRTL = false,
   isCorrect = false,
   isIncorrect = false,
+  isLocked = false,
   onDrop,
   onWordDragStart,
   onWordDragEnd,
@@ -56,14 +58,14 @@ export const DropZone: React.FC<DropZoneProps> = ({
   };
 
   const handleWordClick = () => {
-    if (onWordRemove && word) {
+    if (onWordRemove && word && !isLocked) {
       onWordRemove(index);
     }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     // Space or Enter to remove word
-    if ((e.key === ' ' || e.key === 'Enter') && word && onWordRemove) {
+    if ((e.key === ' ' || e.key === 'Enter') && word && onWordRemove && !isLocked) {
       e.preventDefault();
       onWordRemove(index);
     }
@@ -75,6 +77,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
     isDragOver ? styles.dragOver : '',
     isCorrect ? styles.correct : '',
     isIncorrect ? styles.incorrect : '',
+    isLocked ? styles.locked : '',
     isRTL ? styles.rtl : '',
     className,
   ]
@@ -101,6 +104,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
           word={word}
           index={wordIndex}
           isPlaced={true}
+          isLocked={isLocked}
           isRTL={isRTL}
           onDragStart={onWordDragStart}
           onDragEnd={onWordDragEnd}

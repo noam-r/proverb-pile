@@ -20,12 +20,14 @@ export const shuffleArray = <T>(array: T[]): T[] => {
 
 /**
  * Initializes word positions for a proverb
- * Words are shuffled and marked as not placed
+ * Words are derived from solution, shuffled, and marked as not placed
  * @param proverb - Proverb data
  * @returns Array of word positions
  */
 export const initializeWordPositions = (proverb: Proverb): WordPosition[] => {
-  const shuffledWords = shuffleArray(proverb.words);
+  // Derive words from solution (single source of truth)
+  const wordsFromSolution = proverb.solution.split(/\s+/);
+  const shuffledWords = shuffleArray(wordsFromSolution);
   return shuffledWords.map((word, index) => ({
     word,
     originalIndex: index,
@@ -63,7 +65,8 @@ export const validateSolution = (
 };
 
 /**
- * Normalizes text for comparison (removes extra spaces, punctuation, case)
+ * Normalizes text for comparison (lowercase, trim, collapse whitespace)
+ * Note: Does NOT remove non-ASCII characters to support Hebrew, Arabic, etc.
  * @param text - Text to normalize
  * @returns Normalized text
  */
@@ -71,7 +74,6 @@ export const normalizeText = (text: string): string => {
   return text
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s]/g, '') // Remove punctuation
     .replace(/\s+/g, ' '); // Normalize whitespace
 };
 

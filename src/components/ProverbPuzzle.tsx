@@ -60,7 +60,7 @@ export const ProverbPuzzle: React.FC<ProverbPuzzleProps> = ({
   const handleAvailableWordClick = useCallback(
     (wordIndex: number) => {
       // Find first empty position
-      const maxPosition = proverbState.proverb.words.length;
+      const maxPosition = proverbState.proverb.solution.split(/\s+/).length;
       for (let i = 0; i < maxPosition; i++) {
         const isOccupied = proverbState.wordPositions.some(
           wp => wp.currentIndex === i
@@ -78,7 +78,7 @@ export const ProverbPuzzle: React.FC<ProverbPuzzleProps> = ({
 
   // Create array for drop zones
   const dropZones = Array.from(
-    { length: proverbState.proverb.words.length },
+    { length: proverbState.proverb.solution.split(/\s+/).length },
     (_, index) => {
       const wordAtPosition = proverbState.wordPositions.find(
         wp => wp.currentIndex === index

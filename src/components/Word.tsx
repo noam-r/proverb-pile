@@ -9,6 +9,7 @@ interface WordProps {
   word: string;
   index: number;
   isPlaced: boolean;
+  isLocked?: boolean;
   isRTL?: boolean;
   disabled?: boolean;
   onDragStart: (index: number) => void;
@@ -21,6 +22,7 @@ export const Word: React.FC<WordProps> = ({
   word,
   index,
   isPlaced,
+  isLocked = false,
   isRTL = false,
   disabled = false,
   onDragStart,
@@ -31,7 +33,7 @@ export const Word: React.FC<WordProps> = ({
   const [isDragging, setIsDragging] = React.useState(false);
 
   const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
-    if (disabled) {
+    if (disabled || isLocked) {
       e.preventDefault();
       return;
     }
@@ -50,13 +52,13 @@ export const Word: React.FC<WordProps> = ({
   };
 
   const handleClick = () => {
-    if (!disabled && onClick) {
+    if (!disabled && !isLocked && onClick) {
       onClick();
     }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (disabled) return;
+    if (disabled || isLocked) return;
 
     // Space or Enter to select/activate word
     if (e.key === ' ' || e.key === 'Enter') {
@@ -69,6 +71,7 @@ export const Word: React.FC<WordProps> = ({
     styles.word,
     isDragging ? styles.dragging : '',
     isPlaced ? styles.placed : '',
+    isLocked ? styles.locked : '',
     disabled ? styles.disabled : '',
     isRTL ? styles.rtl : '',
     className,
@@ -79,16 +82,16 @@ export const Word: React.FC<WordProps> = ({
   return (
     <div
       className={classNames}
-      draggable={!disabled}
+      draggable={!disabled && !isLocked}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      tabIndex={disabled ? -1 : 0}
+      tabIndex={disabled || isLocked ? -1 : 0}
       role="button"
-      aria-label={`Word: ${word}`}
+      aria-label={`Word: ${word}${isLocked ? ' (locked)' : ''}`}
       aria-pressed={isPlaced}
-      aria-disabled={disabled}
+      aria-disabled={disabled || isLocked}
     >
       {word}
     </div>
