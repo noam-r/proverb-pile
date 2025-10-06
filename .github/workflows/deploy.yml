@@ -21,15 +21,19 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+          cache-dependency-path: 'proverb-pile-app/package-lock.json'
 
       - name: Install dependencies
         run: npm ci
+        working-directory: proverb-pile-app
 
       - name: Run tests
         run: npm test -- --coverage --watchAll=false
+        working-directory: proverb-pile-app
 
       - name: Build
         run: npm run build
+        working-directory: proverb-pile-app
 
   deploy:
     needs: test
@@ -48,15 +52,18 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+          cache-dependency-path: 'proverb-pile-app/package-lock.json'
 
       - name: Install dependencies
         run: npm ci
+        working-directory: proverb-pile-app
 
       - name: Build
         run: npm run build
+        working-directory: proverb-pile-app
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./proverb-pile-app/build
