@@ -59,6 +59,8 @@ export const Word: React.FC<WordProps> = ({
 
     const touch = e.touches[0];
     touchStartPos.current = { x: touch.clientX, y: touch.clientY };
+
+    // Don't prevent default here - we need to wait to see if it's a drag or click
   };
 
   const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
@@ -72,6 +74,7 @@ export const Word: React.FC<WordProps> = ({
 
     // If moved more than 10px, consider it a drag
     if (dx > 10 || dy > 10) {
+      e.preventDefault(); // Prevent scrolling when dragging
       if (!isDragging) {
         setIsDragging(true);
         onDragStart(index);
@@ -85,6 +88,8 @@ export const Word: React.FC<WordProps> = ({
     }
 
     if (isDragging) {
+      e.preventDefault(); // Prevent click event from firing
+
       // Find drop zone at touch position
       const touch = e.changedTouches[0];
       const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -110,6 +115,7 @@ export const Word: React.FC<WordProps> = ({
       const dy = Math.abs(touch.clientY - touchStartPos.current.y);
 
       if (dx < 10 && dy < 10) {
+        e.preventDefault(); // Prevent double-firing
         handleClick();
       }
     }

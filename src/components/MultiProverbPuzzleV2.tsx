@@ -241,6 +241,11 @@ export const MultiProverbPuzzleV2: React.FC<MultiProverbPuzzleV2Props> = ({
       <div className={`${styles.section} ${styles.availableWordsSection}`}>
         <div className={styles.sectionTitle}>
           {t.availableWords(shuffledAvailableWords.length)}
+          {selectedWordId && (
+            <span className={styles.selectionHint}>
+              {isRTL ? ' ← לחץ על משבצת ריקה' : ' → Tap an empty slot'}
+            </span>
+          )}
         </div>
         <div className={styles.wordsContainer}>
           {shuffledAvailableWords.length > 0 ? (
