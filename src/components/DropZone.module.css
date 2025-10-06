@@ -71,3 +71,19 @@
 .dropZone.rtl {
   direction: rtl;
 }
+
+/* Mobile improvements */
+@media (max-width: 768px) {
+  .dropZone {
+    min-width: 95px;
+    min-height: 52px; /* Larger tap targets */
+    padding: 6px;
+    margin: 4px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .dropZone.empty:active {
+    background-color: #e8e8e8;
+    border-color: #999999;
+  }
+}

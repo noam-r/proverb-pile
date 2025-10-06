@@ -225,7 +225,7 @@ export const MultiProverbPuzzleV2: React.FC<MultiProverbPuzzleV2Props> = ({
         </div>
 
         {/* Available words (shuffled from all proverbs) */}
-        <div className={styles.section}>
+        <div className={`${styles.section} ${styles.availableWordsSection}`}>
           <div className={styles.sectionTitle}>
             {t.availableWords(shuffledAvailableWords.length)}
           </div>

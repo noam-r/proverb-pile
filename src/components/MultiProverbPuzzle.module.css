@@ -204,13 +204,17 @@
   direction: rtl;
 }
 
+/* Available words section - fixed on mobile */
+.availableWordsSection {
+  /* Will be positioned fixed on mobile */
+}
+
 /* Responsive design */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .container {
     padding: 12px;
   }
 
-  .wordsContainer,
   .solutionContainer {
     padding: 8px;
   }
@@ -218,5 +222,33 @@
   .button {
     padding: 10px 20px;
     font-size: 12px;
+  }
+
+  /* Fix available words to bottom on mobile */
+  .availableWordsSection {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border-top: 2px solid var(--color-border);
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    padding: 12px;
+    max-height: 160px;
+    overflow-y: auto;
+  }
+
+  .availableWordsSection .wordsContainer {
+    min-height: auto;
+    max-height: none;
+    padding: 8px;
+    border: none;
+    background-color: transparent;
+  }
+
+  .availableWordsSection .sectionTitle {
+    font-size: 12px;
+    margin-bottom: 8px;
   }
 }

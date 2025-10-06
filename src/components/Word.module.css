@@ -68,3 +68,20 @@
 .word.rtl {
   direction: rtl;
 }
+
+/* Mobile improvements */
+@media (max-width: 768px) {
+  .word {
+    padding: 12px 20px; /* Larger tap targets */
+    font-size: 16px;
+    margin: 4px;
+    /* Prevent text selection on touch devices */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  .word:active {
+    background-color: #e8e8e8;
+    transform: scale(0.95);
+  }
+}
