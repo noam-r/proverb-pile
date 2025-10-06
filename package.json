@@ -1,7 +1,7 @@
 {
   "name": "proverb-pile-app",
   "version": "0.1.0",
-  "homepage": "https://yourusername.github.io/proverb-pile",
+  "homepage": "https://noam-r.github.io/proverb-pile",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
