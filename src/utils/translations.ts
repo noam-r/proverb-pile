@@ -82,7 +82,7 @@ const translations: Record<LanguageCode, Translations> = {
     // Header
     appName: 'Proverb Pile',
     subtitle: (count: number) => `Separate the mixed words into ${count} proverbs`,
-    instructions: `Separate the mixed words into proverbs. Drag words from the available pool to each proverb's answer area.`,
+    instructions: `Separate the mixed words into proverbs. Tap a word to select it, then tap an empty slot to place it.`,
     createPuzzle: 'Create Puzzle',
 
     // Game
@@ -154,7 +154,7 @@ const translations: Record<LanguageCode, Translations> = {
     // Header
     appName: 'ערימת פתגמים',
     subtitle: (count: number) => `הפרד את המילים המעורבבות ל-${count} פתגמים`,
-    instructions: `הפרד את המילים המעורבבות לפתגמים. גרור מילים מהמאגר הזמין לאזור התשובה של כל פתגם.`,
+    instructions: `הפרד את המילים המעורבבות לפתגמים. לחץ על מילה לבחירתה, ואז לחץ על משבצת ריקה למיקומה.`,
     createPuzzle: 'צור חידה',
 
     // Game
