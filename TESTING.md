@@ -225,3 +225,4 @@ See [.github/workflows/deploy.yml](../.github/workflows/deploy.yml) for CI confi
 - Increase component test coverage to 80%+
 - Add performance benchmarking
 - Add automated accessibility testing with axe-core
+ 
