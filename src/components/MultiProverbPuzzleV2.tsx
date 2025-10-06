@@ -42,6 +42,7 @@ export const MultiProverbPuzzleV2: React.FC<MultiProverbPuzzleV2Props> = ({
   translations: t,
 }) => {
   const [draggedWordId, setDraggedWordId] = useState<string | null>(null);
+  const [selectedWordId, setSelectedWordId] = useState<string | null>(null);
 
   // Shuffle available words once (only when the list of word IDs changes)
   const shuffledAvailableWords = useMemo(() => {
@@ -60,11 +61,13 @@ export const MultiProverbPuzzleV2: React.FC<MultiProverbPuzzleV2Props> = ({
 
   const handleDrop = useCallback(
     (proverbIndex: number, position: number) => {
-      if (draggedWordId) {
-        onMoveWord(draggedWordId, proverbIndex, position);
+      const wordId = draggedWordId || selectedWordId;
+      if (wordId) {
+        onMoveWord(wordId, proverbIndex, position);
+        setSelectedWordId(null); // Clear selection after placing
       }
     },
-    [draggedWordId, onMoveWord]
+    [draggedWordId, selectedWordId, onMoveWord]
   );
 
   const handleWordRemove = useCallback(
@@ -76,25 +79,10 @@ export const MultiProverbPuzzleV2: React.FC<MultiProverbPuzzleV2Props> = ({
 
   const handleAvailableWordClick = useCallback(
     (wordId: string) => {
-      // Find first empty position in any proverb
-      for (let proverbIndex = 0; proverbIndex < puzzleData.proverbs.length; proverbIndex++) {
-        const proverb = puzzleData.proverbs[proverbIndex];
-        const wordCount = proverb.solution.split(/\s+/).length;
-        for (let position = 0; position < wordCount; position++) {
-          const isOccupied = allWords.some(
-            w =>
-              w.placement &&
-              w.placement.proverbIndex === proverbIndex &&
-              w.placement.positionIndex === position
-          );
-          if (!isOccupied) {
-            onMoveWord(wordId, proverbIndex, position);
-            return;
-          }
-        }
-      }
+      // Toggle selection: if already selected, deselect; otherwise select
+      setSelectedWordId(prev => prev === wordId ? null : wordId);
     },
-    [puzzleData.proverbs, allWords, onMoveWord]
+    []
   );
 
   // Check if all words are placed
@@ -110,8 +98,9 @@ export const MultiProverbPuzzleV2: React.FC<MultiProverbPuzzleV2Props> = ({
     : styles.container;
 
   return (
-    <div className={containerClassName}>
-      <div className={styles.puzzleArea}>
+    <>
+      <div className={containerClassName}>
+        <div className={styles.puzzleArea}>
         {/* Global status message */}
         {allValidated && (
           <div
@@ -224,54 +213,57 @@ export const MultiProverbPuzzleV2: React.FC<MultiProverbPuzzleV2Props> = ({
           </div>
         </div>
 
-        {/* Available words (shuffled from all proverbs) */}
-        <div className={`${styles.section} ${styles.availableWordsSection}`}>
-          <div className={styles.sectionTitle}>
-            {t.availableWords(shuffledAvailableWords.length)}
-          </div>
-          <div className={styles.wordsContainer}>
-            {shuffledAvailableWords.length > 0 ? (
-              shuffledAvailableWords.map((word, idx) => (
-                <Word
-                  key={`${word.id}-${idx}`}
-                  word={word.text}
-                  index={0} // Not used in V2
-                  isPlaced={false}
-                  isRTL={isRTL}
-                  onDragStart={() => handleWordDragStart(word.id)}
-                  onDragEnd={handleWordDragEnd}
-                  onClick={() => handleAvailableWordClick(word.id)}
-                />
-              ))
-            ) : (
-              <div className={styles.emptyState}>
-                {t.allWordsPlaced}
-              </div>
-            )}
-          </div>
+      </div>
+
+        {/* Controls */}
+        <div className={styles.controls}>
+          <button
+            className={`${styles.button} ${styles.primary}`}
+            onClick={onValidate}
+            disabled={!allWordsPlaced || isCompleted}
+          >
+            {t.checkAnswer}
+          </button>
+          <button
+            className={styles.button}
+            onClick={onUseHint}
+            disabled={hintsRemaining === 0 || isCompleted}
+          >
+            {t.hint(hintsRemaining)}
+          </button>
+          <button className={styles.button} onClick={onReset}>
+            {t.reset}
+          </button>
         </div>
       </div>
 
-      {/* Controls */}
-      <div className={styles.controls}>
-        <button
-          className={`${styles.button} ${styles.primary}`}
-          onClick={onValidate}
-          disabled={!allWordsPlaced || isCompleted}
-        >
-          {t.checkAnswer}
-        </button>
-        <button
-          className={styles.button}
-          onClick={onUseHint}
-          disabled={hintsRemaining === 0 || isCompleted}
-        >
-          {t.hint(hintsRemaining)}
-        </button>
-        <button className={styles.button} onClick={onReset}>
-          {t.reset}
-        </button>
+      {/* Available words (shuffled from all proverbs) - FIXED TO BOTTOM */}
+      <div className={`${styles.section} ${styles.availableWordsSection}`}>
+        <div className={styles.sectionTitle}>
+          {t.availableWords(shuffledAvailableWords.length)}
+        </div>
+        <div className={styles.wordsContainer}>
+          {shuffledAvailableWords.length > 0 ? (
+            shuffledAvailableWords.map((word, idx) => (
+              <Word
+                key={`${word.id}-${idx}`}
+                word={word.text}
+                index={0} // Not used in V2
+                isPlaced={false}
+                isRTL={isRTL}
+                onDragStart={() => handleWordDragStart(word.id)}
+                onDragEnd={handleWordDragEnd}
+                onClick={() => handleAvailableWordClick(word.id)}
+                className={selectedWordId === word.id ? styles.selected : ''}
+              />
+            ))
+          ) : (
+            <div className={styles.emptyState}>
+              {t.allWordsPlaced}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

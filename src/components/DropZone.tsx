@@ -36,6 +36,24 @@ export const DropZone: React.FC<DropZoneProps> = ({
   className = '',
 }) => {
   const [isDragOver, setIsDragOver] = React.useState(false);
+  const dropZoneRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const handleWordDrop = (e: Event) => {
+      const customEvent = e as CustomEvent<{ wordIndex: number }>;
+      if (customEvent.detail) {
+        onDrop(index);
+      }
+    };
+
+    const element = dropZoneRef.current;
+    if (element) {
+      element.addEventListener('word-drop', handleWordDrop);
+      return () => {
+        element.removeEventListener('word-drop', handleWordDrop);
+      };
+    }
+  }, [index, onDrop]);
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -64,10 +82,20 @@ export const DropZone: React.FC<DropZoneProps> = ({
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    // Space or Enter to remove word
-    if ((e.key === ' ' || e.key === 'Enter') && word && onWordRemove && !isLocked) {
+    // Space or Enter to remove word or place selected word
+    if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
-      onWordRemove(index);
+      if (word && onWordRemove && !isLocked) {
+        onWordRemove(index);
+      } else if (!word) {
+        onDrop(index);
+      }
+    }
+  };
+
+  const handleEmptyClick = () => {
+    if (!word) {
+      onDrop(index);
     }
   };
 
@@ -86,13 +114,16 @@ export const DropZone: React.FC<DropZoneProps> = ({
 
   return (
     <div
+      ref={dropZoneRef}
       className={classNames}
+      data-drop-zone="true"
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      onClick={handleEmptyClick}
       onKeyDown={handleKeyDown}
-      tabIndex={word ? 0 : -1}
+      tabIndex={0}
       role="button"
       aria-label={
         word ? `Position ${index + 1}: ${word}` : `Empty position ${index + 1}`

@@ -37,6 +37,11 @@
 }
 
 /* Available words section */
+.availableWordsSection {
+  /* Desktop styles - will be overridden on mobile */
+  margin-bottom: 32px;
+}
+
 .wordsContainer {
   display: flex;
   flex-wrap: wrap;
@@ -209,10 +214,19 @@
   /* Will be positioned fixed on mobile */
 }
 
+/* Selected word highlight */
+.selected {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .container {
     padding: 12px;
+    margin-bottom: 0;
   }
 
   .solutionContainer {
@@ -230,13 +244,17 @@
     bottom: 0;
     left: 0;
     right: 0;
+    width: 100%;
     background-color: #ffffff;
     border-top: 2px solid var(--color-border);
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-    padding: 12px;
-    max-height: 160px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    padding: 8px 12px;
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+    max-height: 40vh;
     overflow-y: auto;
+    margin: 0;
+    -webkit-overflow-scrolling: touch;
   }
 
   .availableWordsSection .wordsContainer {
@@ -245,10 +263,12 @@
     padding: 8px;
     border: none;
     background-color: transparent;
+    margin: 0;
   }
 
   .availableWordsSection .sectionTitle {
-    font-size: 12px;
-    margin-bottom: 8px;
+    font-size: 11px;
+    margin-bottom: 6px;
+    margin-top: 0;
   }
 }

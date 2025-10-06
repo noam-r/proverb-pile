@@ -13,6 +13,7 @@
   user-select: none;
   transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  touch-action: none;
 }
 
 .word:hover {
@@ -29,8 +30,11 @@
 }
 
 .word.dragging {
-  opacity: 0.3;
+  opacity: 0.5;
   cursor: grabbing;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
 }
 
 .word.placed {
