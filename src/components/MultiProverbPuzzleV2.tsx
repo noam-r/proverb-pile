@@ -263,8 +263,17 @@ export const MultiProverbPuzzleV2: React.FC<MultiProverbPuzzleV2Props> = ({
               />
             ))
           ) : (
-            <div className={styles.emptyState}>
-              {t.allWordsPlaced}
+            <div className={styles.emptyStateWithButton}>
+              <div className={styles.emptyState}>
+                {t.allWordsPlaced}
+              </div>
+              <button
+                className={`${styles.button} ${styles.primary} ${styles.checkButtonMobile}`}
+                onClick={onValidate}
+                disabled={isCompleted}
+              >
+                {t.checkAnswer}
+              </button>
             </div>
           )}
         </div>
