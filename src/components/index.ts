@@ -5,7 +5,7 @@
 export { Word } from './Word';
 export { DropZone } from './DropZone';
 export { ProverbPuzzle } from './ProverbPuzzle';
-export { MultiProverbPuzzle } from './MultiProverbPuzzle';
+export { MultiProverbPuzzleV2 } from './MultiProverbPuzzleV2';
 export { Modal } from './Modal';
 export { CulturalContext } from './CulturalContext';
 export { PuzzleBuilder } from './PuzzleBuilder';

@@ -2,4 +2,4 @@
  * Central export point for custom hooks
  */
 
-export { useGameState } from './useGameState';
+export { useMultiProverbGameState } from './useMultiProverbGameState';
