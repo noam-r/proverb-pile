@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/proverb-pile/static/css/main.a0acf6bb.css",
+    "main.js": "/proverb-pile/static/js/main.6966f7f3.js",
+    "static/js/453.67ab5157.chunk.js": "/proverb-pile/static/js/453.67ab5157.chunk.js",
+    "index.html": "/proverb-pile/index.html",
+    "main.a0acf6bb.css.map": "/proverb-pile/static/css/main.a0acf6bb.css.map",
+    "main.6966f7f3.js.map": "/proverb-pile/static/js/main.6966f7f3.js.map",
+    "453.67ab5157.chunk.js.map": "/proverb-pile/static/js/453.67ab5157.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a0acf6bb.css",
+    "static/js/main.6966f7f3.js"
+  ]
+}
