@@ -3,19 +3,19 @@
   "language": "he",
   "proverbs": [
     {
-      "solution": "העץ נופל לכיוון שהוא נוטה",
+      "solution": "אין חמור נוהק אלא בכפיפה של חרובים",
       "culture": "עברית",
-      "meaning": "People tend to follow their natural inclinations - the tree falls in the direction it leans"
+      "meaning": "אדם מגיע לחטא, או מתלונן, דווקא מתוך שפע וטוב"
     },
     {
-      "solution": "הבוקר חכם מן הערב",
-      "culture": "עברית",
-      "meaning": "Morning is wiser than evening - it's better to make decisions with a fresh mind"
+      "solution": "המסמר הבולט מקבל את הפטיש",
+      "culture": "יפנית",
+      "meaning": "לא טוב להתבלט או לסטות מהקבוצה"
     },
     {
-      "solution": "יד רוחצת יד",
-      "culture": "עברית",
-      "meaning": "One hand washes the other - mutual help and cooperation"
+      "solution": "האמן, אבל בדוק",
+      "culture": "רוסית",
+      "meaning": "חשוב לתת אמון, אך לא בעיניים עצומות"
     }
   ]
 }

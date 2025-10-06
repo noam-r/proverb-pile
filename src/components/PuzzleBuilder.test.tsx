@@ -70,8 +70,8 @@ describe('PuzzleBuilder', () => {
 
     expect(screen.getByText('Proverb 4')).toBeInTheDocument();
 
-    const removeButton = screen.getByText('Remove');
-    fireEvent.click(removeButton);
+    const removeButtons = screen.getAllByText('Remove');
+    fireEvent.click(removeButtons[removeButtons.length - 1]); // Click the last remove button (for proverb 4)
 
     expect(screen.queryByText('Proverb 4')).not.toBeInTheDocument();
     expect(screen.getByText('+ Add Another Proverb (Optional)')).toBeInTheDocument();
@@ -89,9 +89,10 @@ describe('PuzzleBuilder', () => {
   it('allows entering proverb data', async () => {
     render(<PuzzleBuilder />);
 
-    const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
-    const cultureInputs = screen.getAllByPlaceholderText(/English, Chinese/i);
-    const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
+    // Find inputs by placeholder text (English or Hebrew)
+    const solutionInputs = screen.getAllByPlaceholderText(/(Don't bite|יד רוחצת יד)/i);
+    const cultureInputs = screen.getAllByPlaceholderText(/(English, Chinese|עברית, ערבית)/i);
+    const meaningInputs = screen.getAllByPlaceholderText(/(Explain what|הסבר מה)/i);
 
     await userEvent.type(solutionInputs[0], 'A bird in hand');
     await userEvent.type(cultureInputs[0], 'English');
@@ -105,7 +106,7 @@ describe('PuzzleBuilder', () => {
   it('shows error when generating with empty fields', async () => {
     render(<PuzzleBuilder />);
 
-    const generateButton = screen.getByText('Generate Puzzle URL');
+    const generateButton = screen.getByText(/(Generate Puzzle URL|צור קישור לחידה)/);
     fireEvent.click(generateButton);
 
     await waitFor(() => {
@@ -117,9 +118,9 @@ describe('PuzzleBuilder', () => {
     // Using userEvent v13 API (no setup needed)
     render(<PuzzleBuilder />);
 
-    const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
-    const cultureInputs = screen.getAllByPlaceholderText(/English, Chinese/i);
-    const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
+    const solutionInputs = screen.getAllByPlaceholderText(/(Don't bite|יד רוחצת יד)/i);
+    const cultureInputs = screen.getAllByPlaceholderText(/(English, Chinese|עברית, ערבית)/i);
+    const meaningInputs = screen.getAllByPlaceholderText(/(Explain what|הסבר מה)/i);
 
     // Enter data for all three proverbs but with short solutions
     for (let i = 0; i < 3; i++) {
@@ -128,11 +129,11 @@ describe('PuzzleBuilder', () => {
       await userEvent.type(meaningInputs[i], 'Test meaning');
     }
 
-    const generateButton = screen.getByText('Generate Puzzle URL');
+    const generateButton = screen.getByText(/(Generate Puzzle URL|צור קישור לחידה)/);
     fireEvent.click(generateButton);
 
     await waitFor(() => {
-      const errorText = screen.getByText(/must contain between 5 and 10 words/i);
+      const errorText = screen.getByText(/(must contain between|must have at least) (3|5)/i);
       expect(errorText).toBeInTheDocument();
     });
   });
@@ -141,9 +142,9 @@ describe('PuzzleBuilder', () => {
     // Using userEvent v13 API (no setup needed)
     render(<PuzzleBuilder />);
 
-    const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
-    const cultureInputs = screen.getAllByPlaceholderText(/English, Chinese/i);
-    const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
+    const solutionInputs = screen.getAllByPlaceholderText(/(Don't bite|יד רוחצת יד)/i);
+    const cultureInputs = screen.getAllByPlaceholderText(/(English, Chinese|עברית, ערבית)/i);
+    const meaningInputs = screen.getAllByPlaceholderText(/(Explain what|הסבר מה)/i);
 
     // Enter valid data for all three proverbs
     const proverbs = [
@@ -158,25 +159,23 @@ describe('PuzzleBuilder', () => {
       await userEvent.type(meaningInputs[i], 'Test meaning here');
     }
 
-    const generateButton = screen.getByText('Generate Puzzle URL');
+    const generateButton = screen.getByText(/(Generate Puzzle URL|צור קישור לחידה)/);
     fireEvent.click(generateButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('Generated Puzzle URL:')).toBeInTheDocument();
-    });
-
     // Should display a URL with puzzle parameter
-    const urlDisplay = screen.getByText(/http:\/\/localhost\/proverb-pile\?puzzle=/);
-    expect(urlDisplay).toBeInTheDocument();
+    await waitFor(() => {
+      const urlDisplay = screen.getByDisplayValue(/http:\/\/localhost\/proverb-pile\?puzzle=/);
+      expect(urlDisplay).toBeInTheDocument();
+    });
   });
 
   it('shows copy button after URL generation', async () => {
     // Using userEvent v13 API (no setup needed)
     render(<PuzzleBuilder />);
 
-    const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
-    const cultureInputs = screen.getAllByPlaceholderText(/English, Chinese/i);
-    const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
+    const solutionInputs = screen.getAllByPlaceholderText(/(Don't bite|יד רוחצת יד)/i);
+    const cultureInputs = screen.getAllByPlaceholderText(/(English, Chinese|עברית, ערבית)/i);
+    const meaningInputs = screen.getAllByPlaceholderText(/(Explain what|הסבר מה)/i);
 
     for (let i = 0; i < 3; i++) {
       await userEvent.type(solutionInputs[i], 'This is a valid proverb with enough words');
@@ -184,11 +183,11 @@ describe('PuzzleBuilder', () => {
       await userEvent.type(meaningInputs[i], 'This is the meaning of the proverb');
     }
 
-    const generateButton = screen.getByText('Generate Puzzle URL');
+    const generateButton = screen.getByText(/(Generate Puzzle URL|צור קישור לחידה)/);
     fireEvent.click(generateButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Copy to Clipboard')).toBeInTheDocument();
+      expect(screen.getByText(/(Copy|העתק)/)).toBeInTheDocument();
     });
   });
 
@@ -201,9 +200,9 @@ describe('PuzzleBuilder', () => {
 
     render(<PuzzleBuilder />);
 
-    const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
-    const cultureInputs = screen.getAllByPlaceholderText(/English, Chinese/i);
-    const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
+    const solutionInputs = screen.getAllByPlaceholderText(/(Don't bite|יד רוחצת יד)/i);
+    const cultureInputs = screen.getAllByPlaceholderText(/(English, Chinese|עברית, ערבית)/i);
+    const meaningInputs = screen.getAllByPlaceholderText(/(Explain what|הסבר מה)/i);
 
     for (let i = 0; i < 3; i++) {
       await userEvent.type(solutionInputs[i], 'This is a valid proverb with enough words');
@@ -211,19 +210,19 @@ describe('PuzzleBuilder', () => {
       await userEvent.type(meaningInputs[i], 'This is the meaning of the proverb');
     }
 
-    const generateButton = screen.getByText('Generate Puzzle URL');
+    const generateButton = screen.getByText(/(Generate Puzzle URL|צור קישור לחידה)/);
     fireEvent.click(generateButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Copy to Clipboard')).toBeInTheDocument();
+      expect(screen.getByText(/(Copy|העתק)/)).toBeInTheDocument();
     });
 
-    const copyButton = screen.getByText('Copy to Clipboard');
+    const copyButton = screen.getByText(/(Copy|העתק)/);
     fireEvent.click(copyButton);
 
     await waitFor(() => {
       expect(writeTextMock).toHaveBeenCalledWith(expect.stringContaining('puzzle='));
-      expect(screen.getByText('Copied!')).toBeInTheDocument();
+      expect(screen.getByText(/(Copied!|הועתק!)/)).toBeInTheDocument();
     });
   });
 
@@ -233,9 +232,9 @@ describe('PuzzleBuilder', () => {
 
     render(<PuzzleBuilder />);
 
-    const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
-    const cultureInputs = screen.getAllByPlaceholderText(/English, Chinese/i);
-    const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
+    const solutionInputs = screen.getAllByPlaceholderText(/(Don't bite|יד רוחצת יד)/i);
+    const cultureInputs = screen.getAllByPlaceholderText(/(English, Chinese|עברית, ערבית)/i);
+    const meaningInputs = screen.getAllByPlaceholderText(/(Explain what|הסבר מה)/i);
 
     for (let i = 0; i < 3; i++) {
       await userEvent.type(solutionInputs[i], 'This is a valid proverb with enough words');
@@ -243,37 +242,37 @@ describe('PuzzleBuilder', () => {
       await userEvent.type(meaningInputs[i], 'This is the meaning of the proverb');
     }
 
-    const generateButton = screen.getByText('Generate Puzzle URL');
+    const generateButton = screen.getByText(/(Generate Puzzle URL|צור קישור לחידה)/);
     fireEvent.click(generateButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Copy to Clipboard')).toBeInTheDocument();
+      expect(screen.getByText(/(Copy|העתק)/)).toBeInTheDocument();
     });
 
-    const copyButton = screen.getByText('Copy to Clipboard');
+    const copyButton = screen.getByText(/(Copy|העתק)/);
     fireEvent.click(copyButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Copied!')).toBeInTheDocument();
+      expect(screen.getByText(/(Copied!|הועתק!)/)).toBeInTheDocument();
     });
 
     // Fast-forward time
     jest.advanceTimersByTime(2000);
 
     await waitFor(() => {
-      expect(screen.getByText('Copy to Clipboard')).toBeInTheDocument();
+      expect(screen.getByText(/(Copy|העתק)/)).toBeInTheDocument();
     });
 
     jest.useRealTimers();
   });
 
-  it('validates word count (5-10 words)', async () => {
+  it('validates word count (3-10 words)', async () => {
     // Using userEvent v13 API (no setup needed)
     render(<PuzzleBuilder />);
 
-    const solutionInputs = screen.getAllByPlaceholderText(/Don't bite/i);
-    const cultureInputs = screen.getAllByPlaceholderText(/English, Chinese/i);
-    const meaningInputs = screen.getAllByPlaceholderText(/What does/i);
+    const solutionInputs = screen.getAllByPlaceholderText(/(Don't bite|יד רוחצת יד)/i);
+    const cultureInputs = screen.getAllByPlaceholderText(/(English, Chinese|עברית, ערבית)/i);
+    const meaningInputs = screen.getAllByPlaceholderText(/(Explain what|הסבר מה)/i);
 
     // Too many words (11 words)
     await userEvent.type(solutionInputs[0], 'One two three four five six seven eight nine ten eleven');
@@ -290,11 +289,11 @@ describe('PuzzleBuilder', () => {
     await userEvent.type(cultureInputs[2], 'Test');
     await userEvent.type(meaningInputs[2], 'Test');
 
-    const generateButton = screen.getByText('Generate Puzzle URL');
+    const generateButton = screen.getByText(/(Generate Puzzle URL|צור קישור לחידה)/);
     fireEvent.click(generateButton);
 
     await waitFor(() => {
-      expect(screen.getByText(/must contain between 5 and 10 words/i)).toBeInTheDocument();
+      expect(screen.getByText(/(must have at most|לכל היותר) 10/i)).toBeInTheDocument();
     });
   });
 
@@ -302,7 +301,7 @@ describe('PuzzleBuilder', () => {
     // Using userEvent v13 API (no setup needed)
     render(<PuzzleBuilder />);
 
-    const generateButton = screen.getByText('Generate Puzzle URL');
+    const generateButton = screen.getByText(/(Generate Puzzle URL|צור קישור לחידה)/);
     fireEvent.click(generateButton);
 
     await waitFor(() => {
