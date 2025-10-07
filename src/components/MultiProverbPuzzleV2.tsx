@@ -17,11 +17,12 @@ interface MultiProverbPuzzleV2Props {
   proverbValidation: { isSolved: boolean; isValidated: boolean }[];
   isCompleted: boolean;
   hintsRemaining: number;
+  revealedMeanings: Set<number>;
   onMoveWord: (wordId: string, proverbIndex: number, position: number) => void;
   onRemoveWord: (wordId: string) => void;
   onValidate: () => void;
   onReset: () => void;
-  onUseHint: () => void;
+  onRevealMeaning: (proverbIndex: number) => void;
   isRTL?: boolean;
   translations: ReturnType<typeof getTranslations>;
 }
@@ -33,11 +34,12 @@ export const MultiProverbPuzzleV2: React.FC<MultiProverbPuzzleV2Props> = ({
   proverbValidation,
   isCompleted,
   hintsRemaining,
+  revealedMeanings,
   onMoveWord,
   onRemoveWord,
   onValidate,
   onReset,
-  onUseHint,
+  onRevealMeaning,
   isRTL = false,
   translations: t,
 }) => {
@@ -173,16 +175,48 @@ export const MultiProverbPuzzleV2: React.FC<MultiProverbPuzzleV2Props> = ({
                     <span className={styles.proverbNumber}>
                       {t.proverb} {proverbIndex + 1} ({proverb.culture})
                     </span>
-                    {validation.isValidated && (
-                      <span
-                        className={`${styles.proverbStatus} ${
-                          validation.isSolved ? styles.correct : styles.wrong
-                        }`}
-                      >
-                        {validation.isSolved ? t.correct : t.incorrect}
-                      </span>
-                    )}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {!revealedMeanings.has(proverbIndex) && !validation.isSolved && (
+                        <button
+                          onClick={() => onRevealMeaning(proverbIndex)}
+                          disabled={hintsRemaining === 0 || isCompleted}
+                          className={styles.hintButton}
+                          title={t.hint(hintsRemaining)}
+                          aria-label={`${t.hint(hintsRemaining)} - ${t.proverb} ${proverbIndex + 1}`}
+                        >
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M9 18h6" />
+                            <path d="M10 22h4" />
+                            <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14" />
+                          </svg>
+                        </button>
+                      )}
+                      {validation.isValidated && (
+                        <span
+                          className={`${styles.proverbStatus} ${
+                            validation.isSolved ? styles.correct : styles.wrong
+                          }`}
+                        >
+                          {validation.isSolved ? t.correct : t.incorrect}
+                        </span>
+                      )}
+                    </div>
                   </div>
+
+                  {revealedMeanings.has(proverbIndex) && (
+                    <div className={styles.hintMeaning}>
+                      💡 {proverb.meaning}
+                    </div>
+                  )}
 
                   <div className={styles.solutionContainer}>
                     {dropZones.map(zone => (
@@ -223,13 +257,6 @@ export const MultiProverbPuzzleV2: React.FC<MultiProverbPuzzleV2Props> = ({
             disabled={!allWordsPlaced || isCompleted}
           >
             {t.checkAnswer}
-          </button>
-          <button
-            className={styles.button}
-            onClick={onUseHint}
-            disabled={hintsRemaining === 0 || isCompleted}
-          >
-            {t.hint(hintsRemaining)}
           </button>
           <button className={styles.button} onClick={onReset}>
             {t.reset}

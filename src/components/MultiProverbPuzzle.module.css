@@ -128,6 +128,39 @@
   background-color: var(--color-error-bg);
 }
 
+.hintMeaning {
+  padding: 12px;
+  margin-bottom: 12px;
+  background-color: #fffbea;
+  border: 2px solid #fbbf24;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: #78350f;
+  line-height: 1.5;
+}
+
+.hintButton {
+  padding: 4px 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #fbbf24;
+  transition: all 200ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hintButton:hover:not(:disabled) {
+  color: #f59e0b;
+  transform: scale(1.1);
+}
+
+.hintButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .solutionContainer {
   display: flex;
   flex-wrap: wrap;

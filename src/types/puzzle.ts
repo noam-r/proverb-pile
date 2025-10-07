@@ -118,6 +118,8 @@ export interface MultiProverbGameState {
   error: string | null;
   /** Number of hints remaining (max 2) */
   hintsRemaining: number;
+  /** Set of proverb indices whose meanings have been revealed */
+  revealedMeanings: Set<number>;
 }
 
 /**

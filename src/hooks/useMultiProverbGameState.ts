@@ -82,6 +82,7 @@ export const useMultiProverbGameState = (puzzleData: PuzzleData | null) => {
         isCompleted: false,
         error: 'No puzzle data provided',
         hintsRemaining: 2,
+        revealedMeanings: new Set<number>(),
       };
     }
 
@@ -95,6 +96,7 @@ export const useMultiProverbGameState = (puzzleData: PuzzleData | null) => {
       isCompleted: false,
       error: null,
       hintsRemaining: 2,
+      revealedMeanings: new Set<number>(),
     };
   });
 
@@ -270,86 +272,27 @@ export const useMultiProverbGameState = (puzzleData: PuzzleData | null) => {
   }, []);
 
   /**
-   * Use a hint: lock 1 random unplaced word in its correct position
+   * Use a hint: reveal the meaning of a specific proverb
+   * @param proverbIndex - Index of the proverb to reveal meaning for
    */
-  const handleUseHint = useCallback(() => {
+  const handleUseHint = useCallback((proverbIndex: number) => {
     setGameState(prev => {
       if (prev.hintsRemaining <= 0 || !prev.puzzleData) {
         return prev;
       }
 
-      // Get all unplaced, unlocked words
-      const unplacedWords = prev.allWords.filter(
-        w => !w.placement && !w.isLocked
-      );
-
-      if (unplacedWords.length === 0) {
+      // Check if this proverb's meaning is already revealed or solved
+      if (prev.revealedMeanings.has(proverbIndex) || prev.proverbValidation[proverbIndex]?.isSolved) {
         return prev;
       }
 
-      // Select 1 random word to place
-      const randomIdx = Math.floor(Math.random() * unplacedWords.length);
-      const selectedWord = unplacedWords[randomIdx];
-
-      // Build position map for each proverb to handle duplicate words correctly
-      const proverbPositionMaps = new Map<number, Map<string, number[]>>();
-      prev.puzzleData.proverbs.forEach((proverb, proverbIndex) => {
-        const solutionWords = proverb.solution.split(/\s+/);
-        const positionMap = new Map<string, number[]>();
-        solutionWords.forEach((solWord, idx) => {
-          // Just lowercase for matching - don't strip Unicode characters
-          const normalized = solWord.toLowerCase();
-          if (!positionMap.has(normalized)) {
-            positionMap.set(normalized, []);
-          }
-          positionMap.get(normalized)!.push(idx);
-        });
-        proverbPositionMaps.set(proverbIndex, positionMap);
-      });
-
-      // Track which positions are already used (by locked words or to be placed)
-      const usedPositions = new Map<number, Set<number>>();
-      prev.allWords.forEach(word => {
-        if (word.placement && word.isLocked) {
-          if (!usedPositions.has(word.sourceProverbIndex)) {
-            usedPositions.set(word.sourceProverbIndex, new Set());
-          }
-          usedPositions.get(word.sourceProverbIndex)!.add(word.placement.positionIndex);
-        }
-      });
-
-      // Find correct position for the selected word
-      const positionMap = proverbPositionMaps.get(selectedWord.sourceProverbIndex);
-      // Just lowercase for matching - don't strip Unicode characters
-      const normalized = selectedWord.text.toLowerCase();
-      const availablePositions = positionMap?.get(normalized) || [];
-
-      // Find first unused position for this word
-      const proverbUsed = usedPositions.get(selectedWord.sourceProverbIndex) || new Set();
-      const correctPosition = availablePositions.find(pos => !proverbUsed.has(pos));
-
-      if (correctPosition === undefined) {
-        return prev; // Should never happen with valid data
-      }
-
-      // Place the word in its correct position
-      const newWords = prev.allWords.map(word => {
-        if (word.id === selectedWord.id) {
-          return {
-            ...word,
-            placement: {
-              proverbIndex: word.sourceProverbIndex,
-              positionIndex: correctPosition,
-            },
-            isLocked: true,
-          };
-        }
-        return word;
-      });
+      // Add to revealed meanings
+      const newRevealedMeanings = new Set(prev.revealedMeanings);
+      newRevealedMeanings.add(proverbIndex);
 
       return {
         ...prev,
-        allWords: newWords,
+        revealedMeanings: newRevealedMeanings,
         hintsRemaining: prev.hintsRemaining - 1,
       };
     });

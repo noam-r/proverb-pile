@@ -120,7 +120,7 @@ const translations: Record<LanguageCode, Translations> = {
     // Onboarding
     onboardingTitle: 'How to Play',
     onboardingStep1: 'Tap a word from the word tray at the bottom (it will turn black)',
-    onboardingStep2: 'Tap an empty slot to place the selected word',
+    onboardingStep2: 'Tap an empty slot in the proverb area above to place the selected word',
     onboardingStep3: 'When all words are placed, tap Check Answer',
     onboardingGotIt: 'Got it!',
     help: 'Help',
@@ -200,7 +200,7 @@ const translations: Record<LanguageCode, Translations> = {
     // Onboarding
     onboardingTitle: 'איך משחקים',
     onboardingStep1: 'לחץ על מילה ממגש המילים בתחתית (היא תהפוך לשחורה)',
-    onboardingStep2: 'לחץ על משבצת ריקה כדי למקם את המילה',
+    onboardingStep2: 'לחץ על משבצת ריקה באזור הפתגמים למעלה כדי למקם את המילה',
     onboardingStep3: 'כשכל המילים ממוקמות, לחץ על בדוק תשובה',
     onboardingGotIt: 'הבנתי!',
     help: 'עזרה',

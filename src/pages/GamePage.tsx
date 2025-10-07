@@ -147,11 +147,12 @@ export const GamePage: React.FC = () => {
           proverbValidation={gameState.proverbValidation}
           isCompleted={gameState.isCompleted}
           hintsRemaining={gameState.hintsRemaining}
+          revealedMeanings={gameState.revealedMeanings}
           onMoveWord={moveWord}
           onRemoveWord={removeWord}
           onValidate={validate}
           onReset={reset}
-          onUseHint={useHint}
+          onRevealMeaning={useHint}
           isRTL={isRTL}
           translations={t}
         />
