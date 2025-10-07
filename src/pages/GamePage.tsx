@@ -5,7 +5,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useMultiProverbGameState } from '../hooks/useMultiProverbGameState';
 import { MultiProverbPuzzleV2 } from '../components/MultiProverbPuzzleV2';
-import { Modal, CulturalContext } from '../components';
+import { Modal, CulturalContext, OnboardingModal } from '../components';
 import hebrewPuzzles from '../data/hebrew_puzzles.json';
 import { PuzzleData } from '../types';
 import { getTranslations } from '../utils';
@@ -50,10 +50,20 @@ export const GamePage: React.FC = () => {
   } = useMultiProverbGameState(puzzleData);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
 
   const language = gameState.puzzleData?.language || 'en';
   const isRTL = language === 'he';
   const t = useMemo(() => getTranslations(language as 'en' | 'he'), [language]);
+
+  // Show onboarding on first visit
+  useEffect(() => {
+    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
+    if (!hasSeenOnboarding) {
+      setIsOnboardingOpen(true);
+      localStorage.setItem('hasSeenOnboarding', 'true');
+    }
+  }, []);
 
   // Auto-open modal when game is completed
   useEffect(() => {
@@ -88,6 +98,41 @@ export const GamePage: React.FC = () => {
   return (
     <>
       <header className="App-header" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div style={{ position: 'relative' }}>
+          <button
+            onClick={() => setIsOnboardingOpen(true)}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: isRTL ? 'auto' : '20px',
+              left: isRTL ? '20px' : 'auto',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            aria-label={t.help}
+            title={t.help}
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <circle cx="12" cy="17" r="0.5" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
         <h1>{t.appName}</h1>
         <p className="subtitle">
           {t.subtitle(gameState.puzzleData.proverbs.length)}
@@ -115,6 +160,13 @@ export const GamePage: React.FC = () => {
       <footer className="App-footer" dir={isRTL ? 'rtl' : 'ltr'}>
         <a href="/#/builder">{t.createPuzzle}</a>
       </footer>
+
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onClose={() => setIsOnboardingOpen(false)}
+        isRTL={isRTL}
+        translations={t}
+      />
 
       <Modal
         isOpen={isModalOpen}

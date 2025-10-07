@@ -9,3 +9,4 @@ export { MultiProverbPuzzleV2 } from './MultiProverbPuzzleV2';
 export { Modal } from './Modal';
 export { CulturalContext } from './CulturalContext';
 export { PuzzleBuilder } from './PuzzleBuilder';
+export { OnboardingModal } from './OnboardingModal';
