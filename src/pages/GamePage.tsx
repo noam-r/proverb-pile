@@ -51,6 +51,7 @@ export const GamePage: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const [isHelpMode, setIsHelpMode] = useState(false);
 
   const language = gameState.puzzleData?.language || 'en';
   const isRTL = language === 'he';
@@ -61,6 +62,7 @@ export const GamePage: React.FC = () => {
     const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
     if (!hasSeenOnboarding) {
       setIsOnboardingOpen(true);
+      setIsHelpMode(false); // Initial onboarding, not help mode
       localStorage.setItem('hasSeenOnboarding', 'true');
     }
   }, []);
@@ -99,39 +101,48 @@ export const GamePage: React.FC = () => {
     <>
       <header className="App-header" dir={isRTL ? 'rtl' : 'ltr'}>
         <div style={{ position: 'relative' }}>
-          <button
-            onClick={() => setIsOnboardingOpen(true)}
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: isRTL ? 'auto' : '20px',
-              left: isRTL ? '20px' : 'auto',
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            aria-label={t.help}
-            title={t.help}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            right: isRTL ? 'auto' : '20px',
+            left: isRTL ? '20px' : 'auto',
+            display: 'flex',
+            gap: '8px',
+            alignItems: 'center'
+          }}>
+            <button
+              onClick={() => {
+                setIsHelpMode(true); // This is help mode, not initial onboarding
+                setIsOnboardingOpen(true);
+              }}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              aria-label={t.help}
+              title={t.help}
             >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-              <circle cx="12" cy="17" r="0.5" fill="currentColor" />
-            </svg>
-          </button>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <circle cx="12" cy="17" r="0.5" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
         </div>
         <h1>{t.appName}</h1>
         <p className="subtitle">
@@ -158,14 +169,13 @@ export const GamePage: React.FC = () => {
         />
       </main>
 
-      <footer className="App-footer" dir={isRTL ? 'rtl' : 'ltr'}>
-        <a href="/#/builder">{t.createPuzzle}</a>
-      </footer>
+
 
       <OnboardingModal
         isOpen={isOnboardingOpen}
         onClose={() => setIsOnboardingOpen(false)}
         isRTL={isRTL}
+        showCreatePuzzleLink={isHelpMode}
         translations={t}
       />
 

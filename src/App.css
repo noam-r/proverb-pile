@@ -71,26 +71,7 @@ main {
   padding: 40px 20px;
   max-width: 1200px;
   margin: 0 auto;
-  min-height: calc(100vh - 200px);
-}
-
-.App-footer {
-  padding: 20px;
-  text-align: center;
-  border-top: 2px solid #e0e0e0;
-  background-color: #f9f9f9;
-}
-
-.App-footer a {
-  color: #666666;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: color 300ms;
-}
-
-.App-footer a:hover {
-  color: #000000;
+  min-height: calc(100vh - 140px);
 }
 
 .error-container,
@@ -224,10 +205,5 @@ main {
 
   .cultural-context {
     padding: 16px;
-  }
-
-  /* Hide footer on mobile when playing game */
-  .App-footer {
-    display: none;
   }
 }

@@ -139,6 +139,35 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Create Puzzle Section */
+.createPuzzleSection {
+  margin: 16px 0 0 0;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.createPuzzleLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666666;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 200ms ease;
+  justify-content: center;
+}
+
+.createPuzzleLink:hover {
+  color: #000000;
+}
+
+.pencilIcon {
+  flex-shrink: 0;
+}
+
 /* Got it button */
 .gotItButton {
   width: 100%;

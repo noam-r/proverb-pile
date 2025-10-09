@@ -140,25 +140,37 @@
 }
 
 .hintButton {
-  padding: 4px 6px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #fbbf24;
-  transition: all 200ms;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background-color: #fffbea;
+  border: 2px solid #fbbf24;
+  border-radius: 6px;
+  color: #78350f;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms;
 }
 
 .hintButton:hover:not(:disabled) {
-  color: #f59e0b;
-  transform: scale(1.1);
+  background-color: #fef3c7;
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .hintButton:disabled {
-  opacity: 0.3;
+  opacity: 0.5;
   cursor: not-allowed;
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+
+.hintText {
+  white-space: nowrap;
 }
 
 .solutionContainer {
@@ -363,5 +375,32 @@
   .checkButtonMobile {
     padding: 14px 28px;
     font-size: 15px;
+  }
+}
+
+/* Desktop styles - fixed word list positioning */
+@media (min-width: 769px) {
+  .container {
+    padding-bottom: 200px;
+  }
+
+  .controls {
+    margin-bottom: 20px;
+  }
+
+  .availableWordsSection {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 1000px;
+    background-color: #ffffff;
+    border-top: 2px solid var(--color-border);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    max-height: 35vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }

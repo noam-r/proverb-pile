@@ -10,12 +10,14 @@ interface OnboardingModalProps {
   isOpen: boolean;
   onClose: () => void;
   isRTL?: boolean;
+  showCreatePuzzleLink?: boolean;
   translations: {
     onboardingTitle: string;
     onboardingStep1: string;
     onboardingStep2: string;
     onboardingStep3: string;
     onboardingGotIt: string;
+    createPuzzle: string;
   };
 }
 
@@ -23,6 +25,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
   isOpen,
   onClose,
   isRTL = false,
+  showCreatePuzzleLink = false,
   translations: t,
 }) => {
   return (
@@ -78,6 +81,33 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
         <button className={styles.gotItButton} onClick={onClose}>
           {t.onboardingGotIt}
         </button>
+
+        {/* Create Puzzle Link - only show when opened as help modal */}
+        {showCreatePuzzleLink && (
+          <div className={styles.createPuzzleSection}>
+            <a 
+              href="/#/builder" 
+              className={styles.createPuzzleLink}
+              onClick={onClose}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={styles.pencilIcon}
+              >
+                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                <path d="m15 5 4 4" />
+              </svg>
+              {t.createPuzzle}
+            </a>
+          </div>
+        )}
       </div>
     </Modal>
   );
