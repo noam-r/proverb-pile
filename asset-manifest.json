@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/proverb-pile/static/css/main.16c0f077.css",
-    "main.js": "/proverb-pile/static/js/main.10a542ba.js",
+    "main.css": "/proverb-pile/static/css/main.755f818a.css",
+    "main.js": "/proverb-pile/static/js/main.de219e0d.js",
     "static/js/453.67ab5157.chunk.js": "/proverb-pile/static/js/453.67ab5157.chunk.js",
     "index.html": "/proverb-pile/index.html",
-    "main.16c0f077.css.map": "/proverb-pile/static/css/main.16c0f077.css.map",
-    "main.10a542ba.js.map": "/proverb-pile/static/js/main.10a542ba.js.map",
+    "main.755f818a.css.map": "/proverb-pile/static/css/main.755f818a.css.map",
+    "main.de219e0d.js.map": "/proverb-pile/static/js/main.de219e0d.js.map",
     "453.67ab5157.chunk.js.map": "/proverb-pile/static/js/453.67ab5157.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.16c0f077.css",
-    "static/js/main.10a542ba.js"
+    "static/css/main.755f818a.css",
+    "static/js/main.de219e0d.js"
   ]
 }
