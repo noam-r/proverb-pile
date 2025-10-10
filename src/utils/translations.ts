@@ -34,6 +34,7 @@ interface Translations {
   close: string;
   origin: string;
   meaning: string;
+  nextPuzzle: string;
 
   // Onboarding
   onboardingTitle: string;
@@ -116,6 +117,7 @@ const translations: Record<LanguageCode, Translations> = {
     close: 'Close',
     origin: 'Origin',
     meaning: 'Meaning',
+    nextPuzzle: 'Next Puzzle',
 
     // Onboarding
     onboardingTitle: 'How to Play',
@@ -196,6 +198,7 @@ const translations: Record<LanguageCode, Translations> = {
     close: 'סגור',
     origin: 'מקור',
     meaning: 'משמעות',
+    nextPuzzle: 'חידה הבאה',
 
     // Onboarding
     onboardingTitle: 'איך משחקים',

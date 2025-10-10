@@ -1,42 +1,131 @@
 /**
  * Game Page - Main puzzle game (V2 with new architecture)
+ * 
+ * Supports URL parameters:
+ * - puzzle: encoded puzzle data for custom puzzles
+ * - lang/language: preferred language (en/he)
+ * 
+ * Language preference is saved to localStorage and persists across sessions.
+ * URL is updated when language changes to allow sharing language-specific links.
+ * 
+ * Examples:
+ * - /?lang=en (English puzzles)
+ * - /?lang=he (Hebrew puzzles)
+ * - /?language=en (alternative parameter name)
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useMultiProverbGameState } from '../hooks/useMultiProverbGameState';
 import { MultiProverbPuzzleV2 } from '../components/MultiProverbPuzzleV2';
 import { Modal, CulturalContext, OnboardingModal } from '../components';
-import hebrewPuzzles from '../data/hebrew_puzzles.json';
-import { PuzzleData } from '../types';
-import { getTranslations } from '../utils';
+import { LanguageSelector } from '../components/LanguageSelector';
+import { PuzzleData, LanguageCode } from '../types';
+import { getTranslations, getCurrentLanguagePreference } from '../utils';
 import { decodePuzzle, validatePuzzle } from '../utils/puzzleLoader';
 
+
+
+
 export const GamePage: React.FC = () => {
-  // Load puzzle from URL parameter or use default Hebrew puzzles
-  const puzzleData = useMemo(() => {
-    const params = new URLSearchParams(window.location.search);
-    const encodedPuzzle = params.get('puzzle');
+  const [puzzleData, setPuzzleData] = useState<PuzzleData | null>(null);
+  const [puzzleError, setPuzzleError] = useState<string | null>(null);
+  const [isCustomPuzzle, setIsCustomPuzzle] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(getCurrentLanguagePreference);
+  const [hasMorePuzzlesAvailable] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-    if (encodedPuzzle) {
-      try {
-        const decoded = decodePuzzle(encodedPuzzle);
-        const validation = validatePuzzle(decoded);
+  // Load puzzle from URL parameter or generate from CSV
+  const loadPuzzle = async (language?: LanguageCode) => {
+    // Prevent multiple simultaneous loads
+    if (isLoading) return;
+    
+    setIsLoading(true);
+    setPuzzleError(null);
+    
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const encodedPuzzle = params.get('puzzle');
 
-        if (validation.isValid) {
-          return decoded as PuzzleData;
-        } else {
+      if (encodedPuzzle) {
+        // Custom puzzle from URL
+        try {
+          const decoded = decodePuzzle(encodedPuzzle);
+          const validation = validatePuzzle(decoded);
+
+          if (validation.isValid) {
+            setPuzzleData(decoded as PuzzleData);
+            setIsCustomPuzzle(true);
+            setCurrentLanguage(decoded.language as LanguageCode);
+            return;
+          } else {
+            // eslint-disable-next-line no-console
+            console.error('Invalid puzzle data:', validation.error);
+          }
+        } catch (error) {
           // eslint-disable-next-line no-console
-          console.error('Invalid puzzle data:', validation.error);
-          return hebrewPuzzles as PuzzleData;
+          console.error('Failed to decode puzzle:', error);
         }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to decode puzzle:', error);
-        return hebrewPuzzles as PuzzleData;
       }
-    }
 
-    return hebrewPuzzles as PuzzleData;
+      // Load puzzle based on selected language
+      const targetLanguage = language || currentLanguage;
+      
+      try {
+        // eslint-disable-next-line no-console
+        console.log(`Attempting to load ${targetLanguage} puzzle...`);
+        const { generateRandomPuzzleFromCSV } = await import('../utils/csvPuzzleLoader');
+        // eslint-disable-next-line no-console
+        console.log('CSV puzzle loader imported successfully');
+        const { puzzle } = await generateRandomPuzzleFromCSV(targetLanguage);
+        // eslint-disable-next-line no-console
+        console.log(`${targetLanguage} puzzle loaded:`, puzzle);
+        setPuzzleData(puzzle);
+        setIsCustomPuzzle(false);
+        setCurrentLanguage(targetLanguage);
+        // eslint-disable-next-line no-console
+        console.log('Puzzle data set successfully');
+      } catch (csvError) {
+        // eslint-disable-next-line no-console
+        console.error('CSV loading failed, trying Hebrew fallback:', csvError);
+        
+        // Fallback to Hebrew puzzle system if CSV fails
+        try {
+          const { loadRandomHebrewPuzzle } = await import('../utils/randomPuzzleLoader');
+          const fallbackPuzzle = await loadRandomHebrewPuzzle();
+          setPuzzleData(fallbackPuzzle);
+          setIsCustomPuzzle(false);
+          setCurrentLanguage('he');
+        } catch (fallbackError) {
+          // eslint-disable-next-line no-console
+          console.error('Fallback failed:', fallbackError);
+          setPuzzleError('Failed to load puzzle');
+        }
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Track if initial load has been called
+  const initialLoadRef = useRef(false);
+
+  // Save initial language to localStorage if it came from URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlLanguage = params.get('lang') || params.get('language');
+    if (urlLanguage === 'en' || urlLanguage === 'he') {
+      localStorage.setItem('preferredLanguage', urlLanguage);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!initialLoadRef.current) {
+      initialLoadRef.current = true;
+      // eslint-disable-next-line no-console
+      console.log('Initial puzzle load triggered with language:', currentLanguage);
+      loadPuzzle(currentLanguage);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {
@@ -53,9 +142,31 @@ export const GamePage: React.FC = () => {
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isHelpMode, setIsHelpMode] = useState(false);
 
-  const language = gameState.puzzleData?.language || 'en';
-  const isRTL = language === 'he';
-  const t = useMemo(() => getTranslations(language as 'en' | 'he'), [language]);
+  const isRTL = (puzzleData?.language || currentLanguage) === 'he';
+  const t = useMemo(() => getTranslations((puzzleData?.language || currentLanguage) as 'en' | 'he'), [puzzleData?.language, currentLanguage]);
+
+  // Handle language change (only for CSV puzzles)
+  const handleLanguageChange = (newLanguage: LanguageCode) => {
+    if (!isCustomPuzzle) {
+      // Save language preference to localStorage
+      localStorage.setItem('preferredLanguage', newLanguage);
+      
+      // Update URL to reflect language choice (for sharing)
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', newLanguage);
+      window.history.replaceState({}, '', url.toString());
+      
+      setCurrentLanguage(newLanguage);
+      loadPuzzle(newLanguage);
+    }
+  };
+
+  // Handle next puzzle (only for CSV puzzles)
+  const handleNextPuzzle = () => {
+    if (!isCustomPuzzle) {
+      loadPuzzle(currentLanguage);
+    }
+  };
 
   // Show onboarding on first visit
   useEffect(() => {
@@ -74,11 +185,11 @@ export const GamePage: React.FC = () => {
     }
   }, [gameState.isCompleted]);
 
-  if (gameState.error) {
+  if (puzzleError || (gameState.error && !isLoading && puzzleData === null)) {
     return (
       <div className="error-container" dir={isRTL ? 'rtl' : 'ltr'}>
         <h1>{t.errorLoading}</h1>
-        <p>{gameState.error}</p>
+        <p>{puzzleError || gameState.error}</p>
         <p>{t.errorMessage}</p>
         <p>
           {isRTL ? 'או ' : 'Or '}
@@ -89,7 +200,7 @@ export const GamePage: React.FC = () => {
     );
   }
 
-  if (!gameState.puzzleData) {
+  if (isLoading || !puzzleData || !gameState.puzzleData) {
     return (
       <div className="loading-container" dir={isRTL ? 'rtl' : 'ltr'}>
         <p>{t.loading}</p>
@@ -110,6 +221,15 @@ export const GamePage: React.FC = () => {
             gap: '8px',
             alignItems: 'center'
           }}>
+            {/* Language selector - only show for CSV puzzles */}
+            {!isCustomPuzzle && (
+              <LanguageSelector
+                currentLanguage={currentLanguage}
+                onLanguageChange={handleLanguageChange}
+                isRTL={isRTL}
+              />
+            )}
+            
             <button
               onClick={() => {
                 setIsHelpMode(true); // This is help mode, not initial onboarding
@@ -146,13 +266,13 @@ export const GamePage: React.FC = () => {
         </div>
         <h1>{t.appName}</h1>
         <p className="subtitle">
-          {t.subtitle(gameState.puzzleData.proverbs.length)}
+          {t.subtitle(puzzleData.proverbs.length)}
         </p>
       </header>
 
       <main dir={isRTL ? 'rtl' : 'ltr'}>
         <MultiProverbPuzzleV2
-          puzzleData={gameState.puzzleData}
+          puzzleData={puzzleData}
           allWords={gameState.allWords}
           availableWords={availableWords}
           proverbValidation={gameState.proverbValidation}
@@ -184,9 +304,47 @@ export const GamePage: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         title={t.congratulations}
         isRTL={isRTL}
+        footer={
+          !isCustomPuzzle && hasMorePuzzlesAvailable ? (
+            <div style={{ 
+              display: 'flex', 
+              gap: '12px', 
+              justifyContent: 'center',
+              padding: '16px 0 0 0'
+            }}>
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  handleNextPuzzle();
+                }}
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  border: '2px solid #4caf50',
+                  backgroundColor: '#4caf50',
+                  color: '#ffffff',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  transition: 'all 300ms'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#45a049';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#4caf50';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                {t.nextPuzzle}
+              </button>
+            </div>
+          ) : undefined
+        }
       >
         <div>
-          {gameState.puzzleData.proverbs.map((proverb, index) => (
+          {puzzleData.proverbs.map((proverb, index) => (
             <CulturalContext
               key={index}
               proverb={proverb}

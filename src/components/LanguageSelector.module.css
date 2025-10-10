@@ -1,0 +1,73 @@
+/* Language Selector Styles */
+
+.languageSelector {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 8px 24px 8px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: currentColor;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 200ms ease;
+  min-width: 80px;
+}
+
+.select:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.select:focus {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+.select.rtl {
+  padding: 8px 8px 8px 24px;
+  direction: rtl;
+}
+
+.icon {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.select.rtl + .icon {
+  right: auto;
+  left: 6px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .select {
+    font-size: 12px;
+    padding: 6px 20px 6px 6px;
+    min-width: 70px;
+  }
+  
+  .select.rtl {
+    padding: 6px 6px 6px 20px;
+  }
+  
+  .icon {
+    width: 14px;
+    height: 14px;
+    right: 4px;
+  }
+  
+  .select.rtl + .icon {
+    right: auto;
+    left: 4px;
+  }
+}

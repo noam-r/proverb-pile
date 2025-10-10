@@ -3,7 +3,7 @@
  * This replaces the old architecture that restricted words to their source proverb
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { MultiProverbGameState, PuzzleData, GlobalWord } from '../types';
 
 /**
@@ -80,7 +80,7 @@ export const useMultiProverbGameState = (puzzleData: PuzzleData | null) => {
         allWords: [],
         proverbValidation: [],
         isCompleted: false,
-        error: 'No puzzle data provided',
+        error: null, // Don't set error initially - wait for puzzle to load
         hintsRemaining: 2,
         revealedMeanings: new Set<number>(),
       };
@@ -99,6 +99,24 @@ export const useMultiProverbGameState = (puzzleData: PuzzleData | null) => {
       revealedMeanings: new Set<number>(),
     };
   });
+
+  // Update game state when puzzle data changes
+  useEffect(() => {
+    if (puzzleData && (!gameState.puzzleData || gameState.puzzleData !== puzzleData)) {
+      setGameState({
+        puzzleData,
+        allWords: initializeGlobalWords(puzzleData),
+        proverbValidation: puzzleData.proverbs.map(() => ({
+          isSolved: false,
+          isValidated: false,
+        })),
+        isCompleted: false,
+        error: null,
+        hintsRemaining: 2,
+        revealedMeanings: new Set<number>(),
+      });
+    }
+  }, [puzzleData, gameState.puzzleData]);
 
   /**
    * Move a word to a specific proverb position

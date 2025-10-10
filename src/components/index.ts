@@ -10,3 +10,4 @@ export { Modal } from './Modal';
 export { CulturalContext } from './CulturalContext';
 export { PuzzleBuilder } from './PuzzleBuilder';
 export { OnboardingModal } from './OnboardingModal';
+export { LanguageSelector } from './LanguageSelector';
