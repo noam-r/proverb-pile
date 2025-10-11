@@ -1,15 +1,27 @@
 {
   "files": {
-    "main.css": "/proverb-pile/static/css/main.755f818a.css",
-    "main.js": "/proverb-pile/static/js/main.de219e0d.js",
-    "static/js/453.67ab5157.chunk.js": "/proverb-pile/static/js/453.67ab5157.chunk.js",
+    "main.css": "/proverb-pile/static/css/main.3b3d8305.css",
+    "main.js": "/proverb-pile/static/js/main.62f7dd90.js",
+    "static/js/651.c3387fb3.chunk.js": "/proverb-pile/static/js/651.c3387fb3.chunk.js",
+    "static/js/870.e03b0f0a.chunk.js": "/proverb-pile/static/js/870.e03b0f0a.chunk.js",
+    "static/js/663.36a5a71b.chunk.js": "/proverb-pile/static/js/663.36a5a71b.chunk.js",
+    "static/js/628.67c28deb.chunk.js": "/proverb-pile/static/js/628.67c28deb.chunk.js",
+    "static/js/453.0e4aeaf1.chunk.js": "/proverb-pile/static/js/453.0e4aeaf1.chunk.js",
+    "static/js/370.86cbdac9.chunk.js": "/proverb-pile/static/js/370.86cbdac9.chunk.js",
+    "static/js/835.c32e7f6e.chunk.js": "/proverb-pile/static/js/835.c32e7f6e.chunk.js",
+    "static/js/440.2f1f88e1.chunk.js": "/proverb-pile/static/js/440.2f1f88e1.chunk.js",
+    "static/js/633.c9f38a0d.chunk.js": "/proverb-pile/static/js/633.c9f38a0d.chunk.js",
+    "static/js/822.cf056a12.chunk.js": "/proverb-pile/static/js/822.cf056a12.chunk.js",
+    "static/js/114.d64083ed.chunk.js": "/proverb-pile/static/js/114.d64083ed.chunk.js",
+    "static/js/834.1bd383c4.chunk.js": "/proverb-pile/static/js/834.1bd383c4.chunk.js",
     "index.html": "/proverb-pile/index.html",
-    "main.755f818a.css.map": "/proverb-pile/static/css/main.755f818a.css.map",
-    "main.de219e0d.js.map": "/proverb-pile/static/js/main.de219e0d.js.map",
-    "453.67ab5157.chunk.js.map": "/proverb-pile/static/js/453.67ab5157.chunk.js.map"
+    "main.3b3d8305.css.map": "/proverb-pile/static/css/main.3b3d8305.css.map",
+    "main.62f7dd90.js.map": "/proverb-pile/static/js/main.62f7dd90.js.map",
+    "651.c3387fb3.chunk.js.map": "/proverb-pile/static/js/651.c3387fb3.chunk.js.map",
+    "834.1bd383c4.chunk.js.map": "/proverb-pile/static/js/834.1bd383c4.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.755f818a.css",
-    "static/js/main.de219e0d.js"
+    "static/css/main.3b3d8305.css",
+    "static/js/main.62f7dd90.js"
   ]
 }
