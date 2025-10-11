@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Modal } from './Modal';
 import styles from './OnboardingModal.module.css';
 
@@ -85,8 +86,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
         {/* Create Puzzle Link - only show when opened as help modal */}
         {showCreatePuzzleLink && (
           <div className={styles.createPuzzleSection}>
-            <a 
-              href="/#/builder" 
+            <Link 
+              to="/builder" 
               className={styles.createPuzzleLink}
               onClick={onClose}
             >
@@ -105,7 +106,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 <path d="m15 5 4 4" />
               </svg>
               {t.createPuzzle}
-            </a>
+            </Link>
           </div>
         )}
       </div>

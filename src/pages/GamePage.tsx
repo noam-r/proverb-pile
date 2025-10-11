@@ -15,6 +15,7 @@
  */
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useMultiProverbGameState } from '../hooks/useMultiProverbGameState';
 import { MultiProverbPuzzleV2 } from '../components/MultiProverbPuzzleV2';
 import { Modal, CulturalContext, OnboardingModal, GameOverModal, GameStatistics } from '../components';
@@ -224,7 +225,7 @@ export const GamePage: React.FC = () => {
         <p>{t.errorMessage}</p>
         <p>
           {isRTL ? 'או ' : 'Or '}
-          <a href="/#/builder">{t.orCreate}</a>
+          <Link to="/builder">{t.orCreate}</Link>
           {isRTL ? '' : '!'}
         </p>
       </div>
