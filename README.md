@@ -100,10 +100,10 @@ Puzzles are Base64-encoded in the URL, requiring no backend or database. Benefit
 
 ## Deployment
 
-Automatically deployed to GitHub Pages on push to master:
-1. Tests run
+Automatically deployed to GitHub Pages via GitHub Actions on push to master:
+1. Tests run with full coverage
 2. Build production bundle
-3. Deploy to gh-pages branch
+3. Deploy directly to GitHub Pages (no gh-pages branch)
 
 Live at: https://noam-r.github.io/proverb-pile/
 
