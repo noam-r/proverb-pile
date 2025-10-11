@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import { MultiProverbGameState, PuzzleData, GlobalWord, SelectionState } from '../types/puzzle';
+import { MultiProverbGameState, PuzzleData, GlobalWord } from '../types/puzzle';
 import { countWordsInSolution } from '../utils/wordUtils';
 
 /**

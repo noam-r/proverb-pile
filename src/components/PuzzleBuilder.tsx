@@ -2,7 +2,7 @@
  * Puzzle Builder component for creating custom puzzles
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { PuzzleData, Proverb, LanguageCode } from '../types';
 import { encodePuzzle, decodePuzzle, validatePuzzle, shuffleArray, getTranslations } from '../utils';
 import styles from './PuzzleBuilder.module.css';
@@ -139,9 +139,16 @@ export const PuzzleBuilder: React.FC = () => {
   const handleCopyURL = useCallback(() => {
     navigator.clipboard.writeText(generatedURL).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     });
   }, [generatedURL]);
+
+  // Reset copied state after 2 seconds
+  useEffect(() => {
+    if (copied) {
+      const timer = setTimeout(() => setCopied(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [copied]);
 
   const handleClear = useCallback(() => {
     setProverbs([

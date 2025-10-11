@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PuzzleBuilder } from './PuzzleBuilder';
 
@@ -257,7 +257,9 @@ describe('PuzzleBuilder', () => {
     });
 
     // Fast-forward time
-    jest.advanceTimersByTime(2000);
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
 
     await waitFor(() => {
       expect(screen.getByText(/(Copy|העתק)/)).toBeInTheDocument();
