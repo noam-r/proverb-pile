@@ -80,6 +80,13 @@
   border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  /* Improve accessibility with focus styles */
+  position: relative;
+}
+
+.proverbItem:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .proverbItem.validated {
@@ -151,7 +158,87 @@
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 200ms;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  /* Improve accessibility */
+  position: relative;
+}
+
+.hintButton:focus {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+.hintButtonLevel2 {
+  background-color: #e0f2fe !important;
+  border-color: #0284c7 !important;
+  color: #0c4a6e !important;
+}
+
+.hintButtonLevel2:hover:not(:disabled) {
+  background-color: #bae6fd !important;
+  border-color: #0369a1 !important;
+}
+
+.validateButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background-color: #f0fdf4;
+  border: 2px solid #16a34a;
+  border-radius: 6px;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.validateButton:hover:not(:disabled) {
+  background-color: #dcfce7;
+  border-color: #15803d;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.validateButton:focus {
+  outline: 2px solid #16a34a;
+  outline-offset: 2px;
+}
+
+.validateButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+
+.validateText {
+  white-space: nowrap;
+}
+
+/* Animation for words being returned to tray */
+@keyframes wordReturnToTray {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+    background-color: #fef2f2;
+    border-color: #ef4444;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+.wordReturning {
+  animation: wordReturnToTray 0.6s ease-in-out;
 }
 
 .hintButton:hover:not(:disabled) {
@@ -191,6 +278,20 @@
   border-radius: var(--radius-md);
   font-size: 16px;
   font-weight: 600;
+  /* Smooth transitions for status changes */
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation: statusSlideIn 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes statusSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .status.success {
@@ -229,6 +330,13 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all var(--transition-duration) var(--transition-easing);
+  /* Improve accessibility */
+  position: relative;
+}
+
+.button:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .button:hover:not(:disabled) {
@@ -298,6 +406,23 @@
   color: #ffffff !important;
   border-color: #000000 !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Auto-focus target highlight */
+.autoFocus {
+  background-color: #e0f2fe !important;
+  border-color: #0284c7 !important;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2) !important;
+  animation: autoFocusPulse 2s ease-in-out infinite;
+}
+
+@keyframes autoFocusPulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+  }
+  50% { 
+    box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.4);
+  }
 }
 
 /* Responsive design */

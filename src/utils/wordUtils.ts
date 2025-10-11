@@ -147,3 +147,19 @@ export const resetWordPositions = (
     currentIndex: null,
   }));
 };
+
+/**
+ * Counts the number of words in a proverb solution
+ * Handles edge cases like empty strings and extra whitespace
+ * @param solution - The proverb solution text
+ * @returns Number of words in the solution
+ */
+export const countWordsInSolution = (solution: string): number => {
+  if (!solution || typeof solution !== 'string') {
+    return 0;
+  }
+  
+  // Trim and split by whitespace, filter out empty strings
+  const words = solution.trim().split(/\s+/).filter(word => word.length > 0);
+  return words.length;
+};

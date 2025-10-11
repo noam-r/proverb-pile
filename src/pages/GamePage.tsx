@@ -17,7 +17,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useMultiProverbGameState } from '../hooks/useMultiProverbGameState';
 import { MultiProverbPuzzleV2 } from '../components/MultiProverbPuzzleV2';
-import { Modal, CulturalContext, OnboardingModal } from '../components';
+import { Modal, CulturalContext, OnboardingModal, GameOverModal, GameStatistics } from '../components';
 import { LanguageSelector } from '../components/LanguageSelector';
 import { PuzzleData, LanguageCode } from '../types';
 import { getTranslations, getCurrentLanguagePreference } from '../utils';
@@ -134,13 +134,20 @@ export const GamePage: React.FC = () => {
     moveWord,
     removeWord,
     validate,
+    validateProverb,
     reset,
     useHint,
+    selectWord,
+    selectPlaceholder,
+    clearSelection,
+    findNextEmptySlot,
+    updateAutoFocus,
   } = useMultiProverbGameState(puzzleData);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isHelpMode, setIsHelpMode] = useState(false);
+  const [isGameOverModalOpen, setIsGameOverModalOpen] = useState(false);
 
   const isRTL = (puzzleData?.language || currentLanguage) === 'he';
   const t = useMemo(() => getTranslations((puzzleData?.language || currentLanguage) as 'en' | 'he'), [puzzleData?.language, currentLanguage]);
@@ -168,6 +175,23 @@ export const GamePage: React.FC = () => {
     }
   };
 
+  // Handle retry - reset the current puzzle
+  const handleRetry = () => {
+    setIsGameOverModalOpen(false);
+    reset();
+  };
+
+  // Handle new puzzle from game over modal
+  const handleNewPuzzleFromGameOver = () => {
+    setIsGameOverModalOpen(false);
+    if (!isCustomPuzzle) {
+      loadPuzzle(currentLanguage);
+    } else {
+      // For custom puzzles, just reset
+      reset();
+    }
+  };
+
   // Show onboarding on first visit
   useEffect(() => {
     const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
@@ -184,6 +208,13 @@ export const GamePage: React.FC = () => {
       setIsModalOpen(true);
     }
   }, [gameState.isCompleted]);
+
+  // Auto-open game over modal when game has failed
+  useEffect(() => {
+    if (gameState.hasFailedGame) {
+      setIsGameOverModalOpen(true);
+    }
+  }, [gameState.hasFailedGame]);
 
   if (puzzleError || (gameState.error && !isLoading && puzzleData === null)) {
     return (
@@ -277,13 +308,22 @@ export const GamePage: React.FC = () => {
           availableWords={availableWords}
           proverbValidation={gameState.proverbValidation}
           isCompleted={gameState.isCompleted}
-          hintsRemaining={gameState.hintsRemaining}
-          revealedMeanings={gameState.revealedMeanings}
+          usedHints={gameState.usedHints}
+          wordHintsUsed={gameState.wordHintsUsed}
+          validationAttempts={gameState.validationAttempts}
+          hasFailedGame={gameState.hasFailedGame}
+          selectionState={gameState.selectionState}
           onMoveWord={moveWord}
           onRemoveWord={removeWord}
           onValidate={validate}
+          onValidateProverb={validateProverb}
           onReset={reset}
           onRevealMeaning={useHint}
+          onSelectWord={selectWord}
+          onSelectPlaceholder={selectPlaceholder}
+          onClearSelections={clearSelection}
+          onUpdateAutoFocus={updateAutoFocus}
+          findNextEmptySlot={findNextEmptySlot}
           isRTL={isRTL}
           translations={t}
         />
@@ -309,8 +349,7 @@ export const GamePage: React.FC = () => {
             <div style={{ 
               display: 'flex', 
               gap: '12px', 
-              justifyContent: 'center',
-              padding: '16px 0 0 0'
+              justifyContent: 'center'
             }}>
               <button
                 onClick={() => {
@@ -318,23 +357,25 @@ export const GamePage: React.FC = () => {
                   handleNextPuzzle();
                 }}
                 style={{
-                  padding: '12px 24px',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  border: '2px solid #4caf50',
-                  backgroundColor: '#4caf50',
+                  padding: '14px 32px',
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  border: '1px solid #121213',
+                  backgroundColor: '#121213',
                   color: '#ffffff',
                   borderRadius: '4px',
                   cursor: 'pointer',
-                  transition: 'all 300ms'
+                  transition: 'all 200ms ease',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#45a049';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.backgroundColor = '#787c7e';
+                  e.currentTarget.style.borderColor = '#787c7e';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#4caf50';
-                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.backgroundColor = '#121213';
+                  e.currentTarget.style.borderColor = '#121213';
                 }}
               >
                 {t.nextPuzzle}
@@ -344,6 +385,14 @@ export const GamePage: React.FC = () => {
         }
       >
         <div>
+          <GameStatistics
+            hintsUsed={gameState.totalHintsUsed}
+            validationAttempts={gameState.validationAttempts}
+            totalValidationAttempts={gameState.totalValidationAttempts}
+            isRTL={isRTL}
+            translations={t}
+          />
+          
           {puzzleData.proverbs.map((proverb, index) => (
             <CulturalContext
               key={index}
@@ -354,6 +403,16 @@ export const GamePage: React.FC = () => {
           ))}
         </div>
       </Modal>
+
+      <GameOverModal
+        isOpen={isGameOverModalOpen}
+        onClose={() => setIsGameOverModalOpen(false)}
+        puzzleData={puzzleData}
+        onRetry={handleRetry}
+        onNewPuzzle={handleNewPuzzleFromGameOver}
+        isRTL={isRTL}
+        translations={t}
+      />
     </>
   );
 };

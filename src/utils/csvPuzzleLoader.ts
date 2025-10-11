@@ -127,8 +127,8 @@ export const generateRandomPuzzleFromCSV = async (
     return generateRandomPuzzleFromCSV(language, []);
   }
   
-  // Randomly select 3-4 proverbs
-  const numProverbs = Math.random() < 0.5 ? 3 : 4;
+  // Always select exactly 3 proverbs for default mode
+  const numProverbs = 3;
   const selectedIndices: number[] = [];
   const selectedProverbs: Proverb[] = [];
   

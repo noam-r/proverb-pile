@@ -1,0 +1,115 @@
+/* GameStatistics component styles - NYT Games inspired */
+
+.statistics {
+  margin: 24px 0;
+  padding: 0;
+  background: transparent;
+}
+
+.statistics.rtl {
+  direction: rtl;
+}
+
+.statsGrid {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.statLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: #787c7e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: 700;
+  color: #121213;
+  line-height: 1;
+}
+
+.achievements {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.achievement {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 4px;
+  max-width: 280px;
+}
+
+/* NYT-style achievement colors */
+.achievement.perfect {
+  background-color: #6aaa64;
+  color: #ffffff;
+}
+
+.achievement.firstTry {
+  background-color: #c9b458;
+  color: #ffffff;
+}
+
+.achievement.noHints {
+  background-color: #787c7e;
+  color: #ffffff;
+}
+
+.achievement.minimal {
+  background-color: #85c0f9;
+  color: #ffffff;
+}
+
+.achievement.excellent {
+  background-color: #f5793a;
+  color: #ffffff;
+}
+
+.statistics.rtl .achievement {
+  text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .statsGrid {
+    gap: 24px;
+    padding: 12px 0;
+  }
+  
+  .statValue {
+    font-size: 28px;
+  }
+  
+  .statLabel {
+    font-size: 11px;
+  }
+  
+  .achievement {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+  
+  .achievement {
+    font-size: 13px;
+    padding: 4px 10px;
+  }
+}

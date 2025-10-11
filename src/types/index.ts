@@ -10,6 +10,8 @@ export type {
   ProverbState,
   GameState,
   GlobalWord,
+  ProverbValidation,
+  GameStatistics,
   MultiProverbGameState,
   DragData,
 } from './puzzle';

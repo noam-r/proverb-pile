@@ -19,7 +19,9 @@ interface Translations {
 
   // Buttons
   checkAnswer: string;
-  hint: (remaining: number) => string;
+  hintSimple: string;
+  hintWord: string;
+  validateProverb: string;
   reset: string;
 
   // Validation
@@ -35,6 +37,22 @@ interface Translations {
   origin: string;
   meaning: string;
   nextPuzzle: string;
+
+  // Statistics
+  hintsUsed: string;
+  validationAttempts: string;
+  perfectScore: string;
+  firstTry: string;
+  noHints: string;
+  minimalHints: string;
+  excellentWork: string;
+
+  // Game Over Modal
+  gameOverTitle: string;
+  gameOverMessage: string;
+  correctSolutions: string;
+  tryAgain: string;
+  newPuzzle: string;
 
   // Onboarding
   onboardingTitle: string;
@@ -102,13 +120,15 @@ const translations: Record<LanguageCode, Translations> = {
 
     // Buttons
     checkAnswer: 'Check Answer',
-    hint: (remaining: number) => `Hint (${remaining} remaining)`,
+    hintSimple: 'Hint',
+    hintWord: 'Place Word',
+    validateProverb: 'Check',
     reset: 'Reset',
 
     // Validation
     correct: '✓ Correct',
     incorrect: '✗ Incorrect',
-    allCorrect: '🎉 Perfect! All proverbs are correct!',
+    allCorrect: 'Perfect! All proverbs are correct!',
     partialCorrect: (solved: number, total: number) => `${solved} out of ${total} correct. Keep trying!`,
     noneCorrect: '✗ None are correct yet. Try rearranging the words!',
 
@@ -118,6 +138,22 @@ const translations: Record<LanguageCode, Translations> = {
     origin: 'Origin',
     meaning: 'Meaning',
     nextPuzzle: 'Next Puzzle',
+
+    // Statistics
+    hintsUsed: 'Hints Used',
+    validationAttempts: 'Attempts Used',
+    perfectScore: 'Perfect Score!',
+    firstTry: 'First Try!',
+    noHints: 'No Hints Used!',
+    minimalHints: 'Minimal Hints Used!',
+    excellentWork: 'Excellent Work!',
+
+    // Game Over Modal
+    gameOverTitle: 'Game Over',
+    gameOverMessage: 'Better luck next time! Here are the correct solutions:',
+    correctSolutions: 'Correct Solutions',
+    tryAgain: 'Try Again',
+    newPuzzle: 'New Puzzle',
 
     // Onboarding
     onboardingTitle: 'How to Play',
@@ -183,13 +219,15 @@ const translations: Record<LanguageCode, Translations> = {
 
     // Buttons
     checkAnswer: 'בדוק תשובה',
-    hint: (remaining: number) => `רמז (${remaining} נותרו)`,
+    hintSimple: 'רמז',
+    hintWord: 'מקם מילה',
+    validateProverb: 'בדוק',
     reset: 'אתחל',
 
     // Validation
     correct: '✓ נכון',
     incorrect: '✗ לא נכון',
-    allCorrect: '🎉 מושלם! כל הפתגמים נכונים!',
+    allCorrect: 'מושלם! כל הפתגמים נכונים!',
     partialCorrect: (solved: number, total: number) => `${solved} מתוך ${total} נכונים. המשך לנסות!`,
     noneCorrect: '✗ אף אחד לא נכון עדיין. נסה לסדר מחדש את המילים!',
 
@@ -199,6 +237,22 @@ const translations: Record<LanguageCode, Translations> = {
     origin: 'מקור',
     meaning: 'משמעות',
     nextPuzzle: 'חידה הבאה',
+
+    // Statistics
+    hintsUsed: 'רמזים שנוצלו',
+    validationAttempts: 'ניסיונות שנוצלו',
+    perfectScore: 'ציון מושלם!',
+    firstTry: 'בניסיון הראשון!',
+    noHints: 'בלי רמזים!',
+    minimalHints: 'רמזים מינימליים!',
+    excellentWork: 'עבודה מצוינת!',
+
+    // Game Over Modal
+    gameOverTitle: 'המשחק הסתיים',
+    gameOverMessage: 'בהצלחה בפעם הבאה! הנה הפתרונות הנכונים:',
+    correctSolutions: 'פתרונות נכונים',
+    tryAgain: 'נסה שוב',
+    newPuzzle: 'חידה חדשה',
 
     // Onboarding
     onboardingTitle: 'איך משחקים',

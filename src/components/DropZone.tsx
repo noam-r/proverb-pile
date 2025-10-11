@@ -14,10 +14,13 @@ interface DropZoneProps {
   isCorrect?: boolean;
   isIncorrect?: boolean;
   isLocked?: boolean;
+  isSelected?: boolean;
+  isAutoFocus?: boolean;
   onDrop: (dropIndex: number) => void;
   onWordDragStart: (wordIndex: number) => void;
   onWordDragEnd: () => void;
   onWordRemove?: (dropIndex: number) => void;
+  onPlaceholderClick?: (dropIndex: number) => void;
   className?: string;
 }
 
@@ -29,10 +32,13 @@ export const DropZone: React.FC<DropZoneProps> = ({
   isCorrect = false,
   isIncorrect = false,
   isLocked = false,
+  isSelected = false,
+  isAutoFocus = false,
   onDrop,
   onWordDragStart,
   onWordDragEnd,
   onWordRemove,
+  onPlaceholderClick,
   className = '',
 }) => {
   const [isDragOver, setIsDragOver] = React.useState(false);
@@ -95,7 +101,11 @@ export const DropZone: React.FC<DropZoneProps> = ({
 
   const handleEmptyClick = () => {
     if (!word) {
+      // Call both the drop handler and placeholder click handler
       onDrop(index);
+      if (onPlaceholderClick) {
+        onPlaceholderClick(index);
+      }
     }
   };
 
@@ -106,6 +116,8 @@ export const DropZone: React.FC<DropZoneProps> = ({
     isCorrect ? styles.correct : '',
     isIncorrect ? styles.incorrect : '',
     isLocked ? styles.locked : '',
+    isSelected ? styles.selected : '',
+    isAutoFocus && !word ? styles.autoFocus : '',
     isRTL ? styles.rtl : '',
     className,
   ]

@@ -1,0 +1,214 @@
+/* Game Over Modal styles */
+
+.gameOverContent {
+  text-align: center;
+  animation: modalContentSlideIn 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalContentSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.encouragingMessage {
+  font-size: 18px;
+  color: #666666;
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+.solutionsSection {
+  margin: 32px 0;
+  text-align: left;
+}
+
+.solutionsTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.solutionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.solutionItem {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  /* Staggered animation for solution items */
+  animation: solutionItemSlideIn 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+.solutionItem:nth-child(1) { animation-delay: 100ms; }
+.solutionItem:nth-child(2) { animation-delay: 200ms; }
+.solutionItem:nth-child(3) { animation-delay: 300ms; }
+.solutionItem:nth-child(4) { animation-delay: 400ms; }
+
+@keyframes solutionItemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* RTL animation variant */
+.gameOverContent[dir="rtl"] .solutionItem {
+  animation-name: solutionItemSlideInRTL;
+}
+
+@keyframes solutionItemSlideInRTL {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.solutionItem:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.proverbSolution {
+  font-size: 18px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.proverbDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.proverbOrigin,
+.proverbMeaning {
+  font-size: 14px;
+  color: #495057;
+  line-height: 1.4;
+}
+
+.proverbOrigin strong,
+.proverbMeaning strong {
+  color: #000000;
+  font-weight: 600;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.retryButton,
+.newPuzzleButton {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+  border: 2px solid transparent;
+  min-width: 120px;
+}
+
+.retryButton {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.retryButton:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.retryButton:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.newPuzzleButton {
+  background-color: #ffffff;
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.newPuzzleButton:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-1px);
+}
+
+.newPuzzleButton:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* RTL support */
+.gameOverContent[dir="rtl"] .solutionsSection {
+  text-align: right;
+}
+
+.gameOverContent[dir="rtl"] .actionButtons {
+  flex-direction: row-reverse;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .encouragingMessage {
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+
+  .solutionsTitle {
+    font-size: 18px;
+  }
+
+  .solutionItem {
+    padding: 16px;
+  }
+
+  .proverbSolution {
+    font-size: 16px;
+  }
+
+  .proverbOrigin,
+  .proverbMeaning {
+    font-size: 13px;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .retryButton,
+  .newPuzzleButton {
+    width: 100%;
+    padding: 14px 20px;
+  }
+}

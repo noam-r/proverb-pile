@@ -67,6 +67,8 @@ export interface GlobalWord {
   } | null;
   /** Whether this word is locked (cannot be moved) */
   isLocked: boolean;
+  /** Whether this word was fixed based on proverb length (vs random anchor) */
+  isFixedByLength: boolean;
 }
 
 /**
@@ -100,6 +102,28 @@ export interface GameState {
 }
 
 /**
+ * Validation state for each proverb
+ */
+export interface ProverbValidation {
+  isSolved: boolean;
+  isValidated: boolean;
+}
+
+/**
+ * Game statistics for tracking player performance
+ */
+export interface GameStatistics {
+  /** Total number of hints used across all proverbs */
+  hintsUsed: number;
+  /** Number of validation attempts used */
+  validationAttempts: number;
+  /** Whether player achieved perfect score (no hints, first attempt) */
+  perfectScore: boolean;
+  /** Time to complete in seconds (future enhancement) */
+  timeToComplete?: number;
+}
+
+/**
  * New game state architecture that supports cross-proverb word movement
  */
 export interface MultiProverbGameState {
@@ -108,18 +132,54 @@ export interface MultiProverbGameState {
   /** All words from all proverbs in a global pool */
   allWords: GlobalWord[];
   /** Validation state for each proverb */
-  proverbValidation: {
-    isSolved: boolean;
-    isValidated: boolean;
-  }[];
+  proverbValidation: ProverbValidation[];
   /** Whether all proverbs are completed */
   isCompleted: boolean;
   /** Error message if puzzle failed to load */
   error: string | null;
-  /** Number of hints remaining (max 2) */
-  hintsRemaining: number;
-  /** Set of proverb indices whose meanings have been revealed */
-  revealedMeanings: Set<number>;
+  
+  // Enhanced hint system - per-proverb tracking with levels
+  /** Set of proverb indices that have revealed their meaning (level 1 hint) */
+  usedHints: Set<number>;
+  /** Map of proverb index to number of words placed via hints (level 2 hint) */
+  wordHintsUsed: Map<number, number>;
+  /** Total number of hints used for statistics */
+  totalHintsUsed: number;
+  
+  // Validation attempt system
+  /** Number of validation attempts remaining (starts at 3) */
+  validationAttempts: number;
+  /** Whether the game has failed (all attempts exhausted) */
+  hasFailedGame: boolean;
+  /** Total validation attempts used for statistics */
+  totalValidationAttempts: number;
+  
+  // Enhanced word placement UX
+  /** Selection state for bidirectional word placement */
+  selectionState: SelectionState;
+  
+  /** @deprecated Use usedHints instead */
+  hintsRemaining?: number;
+  /** @deprecated Use usedHints instead */
+  revealedMeanings?: Set<number>;
+}
+
+/**
+ * Selection state for enhanced word placement UX
+ */
+export interface SelectionState {
+  /** Currently selected word from the word tray */
+  selectedWordId: string | null;
+  /** Currently selected placeholder position */
+  selectedPlaceholder: {
+    proverbIndex: number;
+    positionIndex: number;
+  } | null;
+  /** Auto-focus target for continuous placement */
+  autoFocusTarget: {
+    proverbIndex: number;
+    positionIndex: number;
+  } | null;
 }
 
 /**

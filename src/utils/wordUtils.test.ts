@@ -11,6 +11,7 @@ import {
   getAvailableWords,
   getPlacedWords,
   resetWordPositions,
+  countWordsInSolution,
 } from './wordUtils';
 import { Proverb, WordPosition } from '../types';
 
@@ -224,5 +225,40 @@ describe('resetWordPositions', () => {
     const original = [...wordPositions];
     resetWordPositions(wordPositions);
     expect(wordPositions).toEqual(original);
+  });
+});
+
+describe('countWordsInSolution', () => {
+  it('should count words correctly', () => {
+    expect(countWordsInSolution('The quick brown fox jumps')).toBe(5);
+  });
+
+  it('should handle extra whitespace', () => {
+    expect(countWordsInSolution('  The   quick    brown  fox   jumps  ')).toBe(5);
+  });
+
+  it('should handle empty string', () => {
+    expect(countWordsInSolution('')).toBe(0);
+  });
+
+  it('should handle whitespace-only string', () => {
+    expect(countWordsInSolution('   ')).toBe(0);
+  });
+
+  it('should handle single word', () => {
+    expect(countWordsInSolution('Hello')).toBe(1);
+  });
+
+  it('should handle null/undefined input', () => {
+    expect(countWordsInSolution(null as any)).toBe(0);
+    expect(countWordsInSolution(undefined as any)).toBe(0);
+  });
+
+  it('should handle Hebrew text', () => {
+    expect(countWordsInSolution('שלום עולם יפה')).toBe(3);
+  });
+
+  it('should handle mixed punctuation', () => {
+    expect(countWordsInSolution('Hello, world! How are you?')).toBe(5);
   });
 });
